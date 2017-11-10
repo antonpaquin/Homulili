@@ -1,0 +1,37 @@
+<html>
+<head>
+    <link rel="stylesheet" href="/css/page_display"/>
+</head>
+<body>
+<input id="manga_id" type="hidden" value="{{ chapter['manga_id'] }}"/>
+<input id="sort_key" type="hidden" value="{{ chapter['sort_key'] + 1 }}"/>
+
+<div id="float-controls">
+    <input id="chapter-rename" type="text" placeholder="{{ chapter['name'] }}"/>
+    <input type="button" value="rename chapter" intent="chapter-rename" key="{{ chapter['id'] }}"/>
+    <br>
+    <input id="chapter-resort" type="text" placeholder="{{ chapter['sort_key'] }}"/>
+    <input type="button" value="change sort key" intent="chapter-resort" key="{{ chapter['id'] }}"/>
+</div>
+
+<br>
+<table>
+{% for page in pages %}
+    <tr>
+        <input type="button" value="Split below into new chapter" key="{{ page['id'] }}"
+               intent="rechapter" key=""{{ page['id'] }}/>
+        <input type="text" placeholder="name" id="name-{{ page['id'] }}"/>
+        <idcontainer key="{{ page['id'] }}">{{ page['id'] }}</idcontainer>
+    </tr>
+    <br>
+    <tr>
+        <img src="http://localhost:8000/pagedata?page_id={{ page['id'] }}"/>
+        <input type="button" value="delete" intent="delete" key="{{ page['id'] }}"/>
+    </tr>
+    <hr>
+
+{% endfor %}
+</table>
+<script type="text/javascript" src="/js/page_display"></script>
+</body>
+</html>

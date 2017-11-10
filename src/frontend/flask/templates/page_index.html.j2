@@ -1,0 +1,19 @@
+<html>
+<head></head>
+<body>
+<a href="/page/display?chapter_id={{ chapter_id }}">display</a>
+<a href="/page/rechapter?chapter_id={{ chapter_id }}">rechapter</a>
+<table>
+    <tr>
+        <td>id</td>
+        <td>sort_key</td>
+    </tr>
+    {% for page in pages %}
+    <tr>
+        <td>{{ page['id'] }}</td>
+        <td>{{ page['sort_key'] }}</td>
+    </tr>
+    {% endfor %}
+</table>
+</body>
+</html>

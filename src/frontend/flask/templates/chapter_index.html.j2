@@ -1,0 +1,41 @@
+<html>
+<head>
+    <script type="text/javascript" src="/lib/jquery-3.2.1.min.js"></script>
+</head>
+
+<body>
+<a href="/manga">Back</a>
+<table>
+    <tr>
+        <td>id</td>
+        <td>name</td>
+        <td>sort_key</td>
+    </tr>
+{% for chapter in chapters %}
+    <tr>
+        <td>
+            <idcontainer key="{{ chapter['id'] }}">{{ chapter['id'] }}</idcontainer>
+        </td>
+        <td>
+            <a href="/page/display?chapter_id={{ chapter['id'] }}">{{ chapter['name'] }}</a>
+        </td>
+        <td>
+            {{ (chapter['sort_key']|string).rstrip('0').rstrip('.') }}
+        </td>
+        <td>
+            <input type="button" value="delete" intent="delete" key="{{ chapter['id'] }}">
+        </td>
+        <td>
+            <input type="text" id="rename-{{ chapter['id'] }}" placeholder="{{ chapter['name'] }}">
+            <input type="button" value="rename" intent="rename" key="{{ chapter['id'] }}">
+        </td>
+        <td>
+            <input type="text" id="resort-{{ chapter['id'] }}" placeholder="{{ chapter['sort_key'] }}">
+            <input type="button" value="resort" intent="resort" key="{{ chapter['id'] }}">
+        </td>
+    </tr>
+{% endfor %}
+</table>
+<script type="text/javascript" src="/js/chapter_index"></script>
+</body>
+</html>
