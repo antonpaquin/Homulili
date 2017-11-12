@@ -1,6 +1,6 @@
 import os
 
-if True:
+if False:
     raise RuntimeError('killswitch -- remove to run, replace when you\'re done')
     pass
 
