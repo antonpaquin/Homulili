@@ -23,6 +23,21 @@ CREATE TABLE chapters (
 );
 
 
+CREATE TABLE files (
+  file_id         SERIAL PRIMARY KEY NOT NULL,
+  manga_id        SERIAL,
+  url             VARCHAR(511),
+  location        VARCHAR(511),
+  downloaded      BOOLEAN DEFAULT FALSE,
+  ignore          BOOLEAN DEFAULT FALSE,
+
+  time_created    TIMESTAMP DEFAULT current_timestamp,
+  time_updated    TIMESTAMP,
+
+  FOREIGN KEY (manga_id) REFERENCES manga(manga_id) ON DELETE CASCADE
+);
+
+
 CREATE TABLE pages (
   page_id         SERIAL PRIMARY KEY NOT NULL,
   chapter_id      SERIAL,
@@ -37,16 +52,3 @@ CREATE TABLE pages (
 );
 
 
-CREATE TABLE files (
-  file_id         SERIAL PRIMARY KEY NOT NULL,
-  manga_id        SERIAL,
-  url             VARCHAR(511),
-  location        VARCHAR(511),
-  downloaded      BOOLEAN DEFAULT FALSE,
-  ignore          BOOLEAN DEFAULT FALSE,
-
-  time_created    TIMESTAMP DEFAULT current_timestamp,
-  time_updated    TIMESTAMP,
-
-  FOREIGN KEY (manga_id) REFERENCES manga(manga_id) ON DELETE CASCADE
-);

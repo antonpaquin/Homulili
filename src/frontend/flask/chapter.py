@@ -2,8 +2,10 @@ from flask import request
 
 import backend
 from common import render_template
+from security import authenticated
 
 
+@authenticated
 def chapter_route_index():
     if 'manga_id' not in request.args:
         return '', 400
@@ -13,6 +15,7 @@ def chapter_route_index():
     return render_template('chapter_index', manga_id=manga_id, chapters=chapters)
 
 
+@authenticated
 def chapter_route_rename_target():
     if 'chapter_id' not in request.args or 'name' not in request.args:
         return '', 400
@@ -23,11 +26,13 @@ def chapter_route_rename_target():
     return '', 200
 
 
+@authenticated
 def chapter_route_reorder_target():
     backend.chapter.reorder(request.json)
     return '', 200
 
 
+@authenticated
 def chapter_route_delete_target():
     if 'chapter_id' not in request.args:
         return '', 400
@@ -37,6 +42,7 @@ def chapter_route_delete_target():
     return '', 200
 
 
+@authenticated
 def chapter_route_resort_target():
     if 'chapter_id' not in request.args:
         return '', 400

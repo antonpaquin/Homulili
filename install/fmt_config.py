@@ -9,6 +9,7 @@ templates = [
     'src/bots/scraper/secret.py.j2',
     'src/bots/scraper/config.py.j2',
     'src/frontend/flask/config.py.j2',
+    'src/frontend/flask/secret.py.j2',
     'src/manga_host/flask_interface/config.py.j2',
     'src/manga_host/flask/secret.py.j2',
     'src/manga_host/flask/config.py.j2',
@@ -26,6 +27,7 @@ prompt_vars = (
     'admin_internal_port',
     'admin_public_port',
     'postgres_pass',
+    'auth_key',
 )
 
 args = {}

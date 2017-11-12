@@ -2,13 +2,16 @@ from flask import request
 
 import backend
 from common import render_template
+from security import authenticated
 
 
+@authenticated
 def manga_route_root():
     manga = backend.manga.index()
     return render_template('manga', manga=manga)
 
 
+@authenticated
 def manga_route_create():
     if 'link' in request.args:
         backend.manga.create(
