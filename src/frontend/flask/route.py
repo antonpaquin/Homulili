@@ -4,11 +4,13 @@ from common import render_template, render_scss, render_js, render_lib, render_b
 import manga
 import chapter
 import page
+import security
 
 import config
 
 app = Flask(__name__)
 
+app.route('/login')(security.login)
 
 app.route('/manga')(manga.manga_route_root)
 app.route('/manga/create')(manga.manga_route_create)
@@ -18,7 +20,6 @@ app.route('/chapter/rename_target')(chapter.chapter_route_rename_target)
 app.route('/chapter/reorder_target', methods=['POST'])(chapter.chapter_route_reorder_target)
 app.route('/chapter/delete_target')(chapter.chapter_route_delete_target)
 app.route('/chapter/resort_target')(chapter.chapter_route_resort_target)
-
 
 app.route('/page/index')(page.page_route_index)
 app.route('/page/display')(page.page_route_display)
