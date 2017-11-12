@@ -2,32 +2,62 @@
 
 DOCROOT=$(pwd)/../
 
-parser_pid = $(cat /var/run/parser.pid)
+
+if [ ! -e /var/run/homulili ]; then
+    mkdir /var/run/homulili
+fi
+
+
+if [ -e /var/run/homulili/parser.pid ]; then
+    parser_pid=$(cat /var/run/parser.pid)
+else
+    parser_pid="none"
+fi
 if [ ! -e /proc/$parser_pid -a /proc/$parser_pid/exe ]; then
     python3 $DOCROOT/src/bots/parser/main.py &
-    echo $! > /var/run/parser.pid
+    echo $! > /var/run/homulili/parser.pid
 fi
 
-scanner_pid = $(cat /var/run/scanner.pid)
+
+if [ -e /var/run/homulili/scanner.pid ]; then
+    scanner_pid=$(cat /var/run/homulili/scanner.pid)
+else
+    scanner_pid="none"
+fi
 if [ ! -e /proc/$scanner_pid -a /proc/$scanner_pid/exe ]; then
     python3 $DOCROOT/src/bots/scanner/main.py &
-    echo $! > /var/run/scanner.pid
+    echo $! > /var/run/homulili/scanner.pid
 fi
 
-scraper_pid = $(cat /var/run/scraper.pid)
+
+if [ -e /var/run/homulili/scraper.pid ]; then
+    scraper_pid=$(cat /var/run/homulili/scraper.pid)
+else
+    scraper_pid="none"
+fi
 if [ ! -e /proc/$scraper_pid -a /proc/$scraper_pid/exe ]; then
     python3 $DOCROOT/src/bots/scraper/main.py &
-    echo $! > /var/run/scraper.pid
+    echo $! > /var/run/homulili/scraper.pid
 fi
 
-frontend_pid = $(cat /var/run/frontend.pid)
+
+if [ -e /var/run/homulili/frontend.pid ]; then
+    frontend_pid=$(cat /var/run/homulili/frontend.pid)
+else
+    frontend_pid="none"
+fi
 if [ ! -e /proc/$frontend_pid -a /proc/$frontend_pid/exe ]; then
-    python3 $DOCROOT/src/bots/frontend/main.py &
-    echo $! > /var/run/frontend.pid
+    python3 $DOCROOT/src/frontend/flask/route.py &
+    echo $! > /var/run/homulili/frontend.pid
 fi
 
-backend_pid = $(cat /var/run/backend.pid)
+
+if [ -e /var/run/homulili/backend.pid ]; then
+    backend_pid=$(cat /var/run/homulili/backend.pid)
+else
+    backend_pid="none"
+fi
 if [ ! -e /proc/$backend_pid -a /proc/$backend_pid/exe ]; then
-    python3 $DOCROOT/src/bots/backend/main.py &
-    echo $! > /var/run/backend.pid
+    python3 $DOCROOT/src/manga_host/flask/route.py &
+    echo $! > /var/run/homulili/backend.pid
 fi
