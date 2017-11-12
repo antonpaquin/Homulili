@@ -12,6 +12,7 @@ templates = [
     'src/manga_host/flask_interface/config.py.j2',
     'src/manga_host/flask/secret.py.j2',
     'src/manga_host/flask/config.py.j2',
+    'install/postgres.sh.j2',
 ]
 
 prompt_vars = (
