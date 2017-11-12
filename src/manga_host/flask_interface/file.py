@@ -1,7 +1,8 @@
 import requests
 import json
+from . import config
 
-url = 'http://localhost:8000/file'
+url = config.url + '/file'
 
 
 def create(manga_id, file_url, location=None, downloaded=False, ignore=False, parsed=False):

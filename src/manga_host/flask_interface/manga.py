@@ -1,7 +1,8 @@
 import requests
 import json
+from . import config
 
-url = 'http://localhost:8000/manga'
+url = config.url + '/manga'
 
 
 def create(name, author, link):

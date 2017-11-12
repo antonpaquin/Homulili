@@ -5,6 +5,8 @@ import manga
 import chapter
 import page
 
+import config
+
 app = Flask(__name__)
 
 
@@ -50,4 +52,4 @@ def route_lib_images(src):
 
 
 if __name__ == '__main__':
-    app.run(port=8001)
+    app.run(host='0.0.0.0', port=config.admin_port)

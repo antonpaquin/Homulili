@@ -2,6 +2,7 @@ from flask import request
 
 import backend
 from common import render_template
+import config
 
 
 def page_route_index():
@@ -20,7 +21,8 @@ def page_route_display():
     chapter_id = request.args.get('chapter_id')
     chapter = backend.chapter.read(chapter_id)
     pages = backend.page.index(chapter_id)
-    return render_template('page_display', pages=pages, chapter=chapter)
+    return render_template('page_display', pages=pages, chapter=chapter,
+                           api_hostname=config.api_hostname, api_port=config.api_port)
 
 
 def page_route_rechapter():

@@ -9,6 +9,7 @@ import db
 import validator
 import formatter
 
+import config
 import route_commands
 
 
@@ -233,4 +234,4 @@ def pagedata():
 
 
 if __name__ == '__main__':
-    app.run(host='0.0.0.0', port=8000)
+    app.run(host='0.0.0.0', port=config.api_port)

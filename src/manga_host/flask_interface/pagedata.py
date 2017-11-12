@@ -1,7 +1,8 @@
 import requests
 import json
+from . import config
 
-url = 'http://localhost:8000/pagedata'
+url = config.url + '/pagedata'
 
 
 def create(page_id, data):

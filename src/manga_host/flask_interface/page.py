@@ -1,7 +1,8 @@
 import requests
 import json
+from . import config
 
-url = 'http://localhost:8000/page'
+url = config.url + '/page'
 
 
 def create(chapter_id, sort_key, file):

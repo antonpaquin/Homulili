@@ -1,7 +1,8 @@
 import requests
 import json
+from . import config
 
-url = 'http://localhost:8000/chapter'
+url = config.url + '/chapter'
 
 
 def create(manga_id, name, sort_key):
