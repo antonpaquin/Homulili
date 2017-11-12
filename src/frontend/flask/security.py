@@ -1,5 +1,6 @@
 from flask import request, redirect
 import hashlib
+from functools import wraps
 
 from common import render_template
 from secret import auth_key
@@ -24,6 +25,7 @@ def login():
 
 
 def authenticated(f):
+    @wraps(f)
     def wrapped():
         uname = request.cookies.get('uname')
         token = request.cookies.get('token')
