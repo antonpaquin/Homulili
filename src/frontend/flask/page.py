@@ -22,7 +22,7 @@ def page_route_display():
     chapter = backend.chapter.read(chapter_id)
     pages = backend.page.index(chapter_id)
     return render_template('page_display', pages=pages, chapter=chapter,
-                           api_hostname=config.api_hostname, api_port=config.api_port)
+                           api_hostname=config.api_hostname, api_public_port=config.api_public_port)
 
 
 def page_route_rechapter():

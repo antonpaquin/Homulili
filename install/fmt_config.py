@@ -19,9 +19,11 @@ prompt_vars = (
     'madokami_pass',
     'storage_dir',
     'api_hostname',
-    'api_port',
+    'api_internal_port',
+    'api_public_port',
     'admin_hostname',
-    'admin_port',
+    'admin_internal_port',
+    'admin_public_port',
     'postgres_pass',
 )
 
