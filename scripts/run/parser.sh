@@ -3,7 +3,7 @@
 DOCROOT=$(pwd)/../../
 
 if [ ! -e /var/run/homulili ]; then
-    mkdir /var/run/homulili
+    exit 1
 fi
 
 if [ -e /var/run/homulili/parser.pid ]; then
