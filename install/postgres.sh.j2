@@ -1,5 +1,5 @@
 su - postgres <<ENDSQL
 psql postgres -c "CREATE USER homulili"
 psql postgres -c "CREATE DATABASE homulili WITH ENCODING 'UTF8' OWNER homulili"
-psql postgres -c "ALTER USER 'homulili' WITH PASSWORD '{{ postgres_pass }}' "
+psql postgres -c "ALTER USER homulili WITH PASSWORD '{{ postgres_pass }}' "
 ENDSQL

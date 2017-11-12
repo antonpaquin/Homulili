@@ -1,6 +1,6 @@
 #! /bin/bash
 
-DOCROOT=$(pwd)/../
+DOCROOT=$(pwd)/../../
 
 if [ ! -e /var/run/homulili ]; then
     exit 1
