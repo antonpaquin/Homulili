@@ -6,15 +6,16 @@ from . import secret
 
 crypto = Fernet(bytes.fromhex(secret.auth_key))
 
-auth_token = base64.b64encode(crypto.encrypt(json.dumps({
+permissions = json.dumps({
     'create': True,
     'read': True,
     'update': True,
     'delete': True,
     'index': True,
     'command': True,
-}).encode('utf-8'))).decode()
+}).encode('utf-8')
+token = base64.b64encode(crypto.encrypt(permissions)).decode()
 
 auth_header = {
-    'auth_token': auth_token,
+    'auth_token': token,
 }
