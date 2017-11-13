@@ -89,6 +89,9 @@ def index():
     }.items() if value is not None}
 
     response = requests.request(method='VIEW', url=url, params=params)
+    print(response.text)
+    print(url)
+    print(params)
 
     jsn = json.loads(response.text)
 

@@ -7,7 +7,7 @@ class SqlArgumentError(Exception):
     pass
 
 
-conn = psycopg2.connect('dbname=homulili user=homulili host=localhost password={postgres_password}'.format(
+conn = psycopg2.connect('dbname=homulili user=homulili host=127.0.0.1 password={postgres_password}'.format(
     postgres_password=postgres_password,
 ))
 

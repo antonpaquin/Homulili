@@ -1,0 +1,2 @@
+./frontend.sh
+./backend.sh

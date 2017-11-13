@@ -7,6 +7,7 @@ chmod 777 /var/run/homulili
 
 pushd $DOCROOT/install
 python3 fmt_config.py &&
+chmod +x postgres.sh &&
 ./postgres.sh
 popd
 
