@@ -14,8 +14,8 @@ permissions = json.dumps({
     'index': True,
     'command': True,
 }).encode('utf-8')
-token = base64.b64encode(crypto.encrypt(permissions)).decode()
+auth_token = base64.b64encode(crypto.encrypt(permissions)).decode()
 
 auth_header = {
-    'auth_token': token,
+    'auth_token': auth_token,
 }
