@@ -6,7 +6,7 @@ from .common import auth_header, auth_token
 
 url = 'http://{hostname}:{port}/chapter'.format(
     hostname=config.api_hostname,
-    port=config.api_internal_port,
+    port=config.api_public_port,
 )
 
 

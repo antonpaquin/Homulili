@@ -5,7 +5,7 @@ from .common import auth_header
 
 url = 'http://{hostname}:{port}/file'.format(
     hostname=config.api_hostname,
-    port=config.api_internal_port,
+    port=config.api_public_port,
 )
 
 
