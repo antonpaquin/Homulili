@@ -8,7 +8,7 @@ import secret
 from dataflow.utils import input_protection
 from workers.head_url import HeadUrl
 
-madokami_auth = HTTPBasicAuth(*secret.madokami_auth)
+madokami_auth = HTTPBasicAuth(secret.madokami_uname, secret.madokami_pass)
 
 
 class NodeUrl:

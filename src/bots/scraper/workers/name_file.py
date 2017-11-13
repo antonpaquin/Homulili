@@ -7,12 +7,11 @@ import config
 from .common import File
 
 
-root_dir = fs.path.join(config.data_dir, 'raw_files/')
+root_dir = fs.path.join('/data', 'raw_files/')
 
 
 @input_protection()
 def name_file(input: File, output: Queue):
-    print('Enter name_file')
     save_dir = fs.path.join(root_dir, str(input.manga_id))
     filename = '{file_id}_-_{remote_name}'.format(
         file_id=input.file_id,

@@ -7,6 +7,7 @@ from security import authenticated
 
 @authenticated
 def manga_route_root():
+
     manga = backend.manga.index()
     return render_template('manga', manga=manga)
 

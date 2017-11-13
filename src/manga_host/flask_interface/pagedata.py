@@ -1,8 +1,13 @@
 import requests
 import json
 from . import config
+from .common import auth_header
 
-url = config.url + '/pagedata'
+
+url = 'http://{hostname}:{port}/pagedata'.format(
+    hostname=config.api_hostname,
+    port=config.api_internal_port,
+)
 
 
 def create(page_id, data):
@@ -10,7 +15,7 @@ def create(page_id, data):
         'page_id': page_id,
     }
 
-    response = requests.put(url=url, params=params, data=data)
+    response = requests.put(url=url, params=params, data=data, headers=auth_header)
 
     jsn = json.loads(response.text)
 
@@ -25,7 +30,7 @@ def read(page_id):
         'page_id': page_id,
     }
 
-    response = requests.get(url=url, params=params)
+    response = requests.get(url=url, params=params, headers=auth_header)
 
     return response.content
 
@@ -35,7 +40,7 @@ def delete(page_id):
         'page_id': page_id,
     }
 
-    response = requests.delete(url=url, params=params)
+    response = requests.delete(url=url, params=params, headers=auth_header)
 
     jsn = json.loads(response.text)
 

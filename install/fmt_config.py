@@ -1,22 +1,28 @@
 import jinja2
 import os
 import json
+import random
+from cryptography.fernet import Fernet
 
-
-templates = [
-    'src/bots/scanner/secret.py.j2',
-    'src/bots/parser/config.py.j2',
-    'src/bots/scraper/secret.py.j2',
-    'src/bots/scraper/config.py.j2',
-    'src/frontend/flask/config.py.j2',
-    'src/frontend/flask/secret.py.j2',
-    'src/manga_host/flask_interface/config.py.j2',
-    'src/manga_host/flask/secret.py.j2',
-    'src/manga_host/flask/config.py.j2',
-    'install/postgres.sh.j2',
-    'scripts/secret.py.j2',
+# Places where a secret.py and a config.py will be generated
+config_locations = [
+    'src/bots/parser',
+    'src/bots/scraper',
+    'src/bots/scanner',
+    'src/frontend/flask',
+    'src/manga_host/flask',
+    'src/manga_host/flask_interface',
+    'scripts',
 ]
 
+
+# Templates that will be filled as needed
+templates = [
+    'install/postgres.sh.j2',
+]
+
+
+# Variables that the user needs to specify
 prompt_vars = (
     'madokami_uname',
     'madokami_pass',
@@ -27,27 +33,56 @@ prompt_vars = (
     'admin_hostname',
     'admin_internal_port',
     'admin_public_port',
-    'postgres_pass',
-    'auth_key',
 )
 
+# Ask user for variables
 args = {}
 for arg in prompt_vars:
     args[arg] = input(arg + '= ')
 
+
+# Generate a postgres password automatically
+args['postgres_password'] = ''.join([random.choice(
+    'abcdefghijlkmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789'
+) for _ in range(30)])
+
+# Generate an authentication key automatically
+args['auth_key'] = Fernet.generate_key().hex()
+
+# Find current project root automatically
 project_root = os.path.dirname(os.getcwd())
 args['project_root'] = project_root
 
-templates = [project_root + '/' + t for t in templates]
 
+# Prompt user to check input
 print(json.dumps(args, indent=4))
 print('Is this okay?')
 if input('y/N').lower() not in {'yes', 'y', 'ye'}:
     exit(0)
 
-for template_fname in templates:
-    with open(template_fname, 'r') as template_f:
+
+# Generate config and secret output from templates
+with open('template_conf/config.py.j2', 'r') as config_f:
+    config_output = jinja2.Template(config_f.read()).render(**args)
+with open('template_conf/secret.py.j2', 'r') as secret_f:
+    secret_output = jinja2.Template(secret_f.read()).render(**args)
+
+
+# Write config and secret outputs
+for fname in config_locations:
+    config_fname = os.path.join(project_root, fname, 'config.py')
+    with open(config_fname, 'w') as config_f:
+        config_f.write(config_output)
+
+    secret_fname = os.path.join(project_root, fname, 'secret.py')
+    with open(secret_fname, 'w') as secret_f:
+        secret_f.write(secret_output)
+
+
+# Write less-generic templates
+for fname in templates:
+    out_fname = fname[:-3]
+    with open(os.path.join(project_root, fname), 'r') as template_f:
         template = jinja2.Template(template_f.read())
-    output_fname = template_fname[:-3]
-    with open(output_fname, 'w') as output_f:
-        output_f.write(template.render(**args))
+    with open(os.path.join(project_root, out_fname), 'w') as out_f:
+        out_f.write(template.render(**args))

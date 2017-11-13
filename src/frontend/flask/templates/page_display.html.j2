@@ -25,7 +25,7 @@
     </tr>
     <br>
     <tr>
-        <img src="http://{{ api_hostname }}:{{ api_public_port }}/pagedata?page_id={{ page['id'] }}"/>
+        <img src="/pagedata/display?page_id={{ page['id'] }}"/>
         <input type="button" value="delete" intent="delete" key="{{ page['id'] }}"/>
     </tr>
     <hr>

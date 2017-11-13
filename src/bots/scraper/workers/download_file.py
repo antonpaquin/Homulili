@@ -5,35 +5,35 @@ from fs.osfs import OSFS
 import fs.path
 
 from dataflow.utils import input_protection
-import flask_interface
+import backend
 import secret
 import config
 
 from .common import File
 
 
-madokami_auth = HTTPBasicAuth(*secret.madokami_auth)
+madokami_auth = HTTPBasicAuth(secret.madokami_uname, secret.madokami_pass)
 # noinspection PyUnresolvedReferences
-pyfs = OSFS(config.pyfs_container)
+pyfs = OSFS(config.storage_dir)
 
 
 @input_protection()
 def download_file(input: File, output: Queue):
-    print('Enter download_file')
     subdir = fs.path.join(*fs.path.split(input.location)[:-1])
     if not pyfs.isdir(subdir):
         pyfs.makedirs(subdir)
 
     # Before running a download, run a final check to see if we actually need the file
-    pre_check = flask_interface.file.read(input.file_id)
+    pre_check = backend.file.read(input.file_id)
     if pre_check['ignore'] or pre_check['downloaded']:
         return
 
-    data = requests.get(url=input.url, auth=madokami_auth)
-    print('Downloaded file for {manga_id}: {name}'.format(
+    print('Starting download for {manga_id}: {name}'.format(
         manga_id=input.manga_id,
         name=input.location,
     ))
+    data = requests.get(url=input.url, auth=madokami_auth)
+    print('Download complete')
 
     with pyfs.open(input.location, 'wb') as data_f:
         data_f.write(data.content)

@@ -4,6 +4,7 @@ from common import render_template, render_scss, render_js, render_lib, render_b
 import manga
 import chapter
 import page
+import pagedata
 import security
 
 import config
@@ -25,6 +26,8 @@ app.route('/page/index')(page.page_route_index)
 app.route('/page/display')(page.page_route_display)
 app.route('/page/rechapter')(page.page_route_rechapter)
 app.route('/page/rechapter_target', methods=['POST'])(page.page_route_rechapter_target)
+
+app.route('/pagedata/display')(pagedata.pagedata_route_display)
 
 
 @app.route('/')

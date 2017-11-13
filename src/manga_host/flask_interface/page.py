@@ -1,8 +1,13 @@
 import requests
 import json
 from . import config
+from .common import auth_header
 
-url = config.url + '/page'
+
+url = 'http://{hostname}:{port}/page'.format(
+    hostname=config.api_hostname,
+    port=config.api_internal_port,
+)
 
 
 def create(chapter_id, sort_key, file):
@@ -12,13 +17,14 @@ def create(chapter_id, sort_key, file):
         'file': file,
     }.items() if value is not None}
 
-    response = requests.put(url=url, params=params)
+    response = requests.put(url=url, params=params, headers=auth_header)
 
     jsn = json.loads(response.text)
 
     if jsn['status'] == 'success':
         return jsn['data']
     else:
+        print(params)
         raise RuntimeError(jsn)
 
 
@@ -27,7 +33,7 @@ def read(page_id):
         'id': page_id,
     }.items() if value is not None}
 
-    response = requests.get(url=url, params=params)
+    response = requests.get(url=url, params=params, headers=auth_header)
 
     jsn = json.loads(response.text)
 
@@ -45,7 +51,7 @@ def update(page_id, chapter_id=None, sort_key=None, file=None):
         'file': file
     }.items() if value is not None}
 
-    response = requests.patch(url=url, params=params)
+    response = requests.patch(url=url, params=params, headers=auth_header)
 
     jsn = json.loads(response.text)
 
@@ -60,7 +66,7 @@ def delete(page_id):
         'id': page_id,
     }.items() if value is not None}
 
-    response = requests.delete(url=url, params=params)
+    response = requests.delete(url=url, params=params, headers=auth_header)
 
     jsn = json.loads(response.text)
 
@@ -83,7 +89,7 @@ def index(chapter_id):
         'chapter_id': chapter_id,
     }.items() if value is not None}
 
-    response = requests.request(method='VIEW', url=url, params=params)
+    response = requests.request(method='VIEW', url=url, params=params, headers=auth_header)
 
     jsn = json.loads(response.text)
 

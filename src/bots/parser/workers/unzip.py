@@ -12,8 +12,8 @@ import config
 import workers.unzippers as unzippers
 
 # noinspection PyUnresolvedReferences
-root_filestore = osfs.OSFS(config.pyfs_container)
-data_filestore = fs.path.join(config.data_dir, 'raw_files')
+root_filestore = osfs.OSFS(config.storage_dir)
+data_filestore = fs.path.join('/data', 'raw_files')
 
 
 @input_protection()

@@ -23,11 +23,18 @@ __file_name = {
     'minlength': 1,
 }
 
+__file_id = {
+    'required': False,
+    'type': 'integer',
+    'coerce': int,
+    'min': 0,
+}
+
 
 create = {
     'chapter_id': __chapter_id_required,
     'sort_key': __sort_key,
-    'file_name': __file_name,
+    'file_id': __file_id,
 }
 
 

@@ -1,4 +1,4 @@
-import flask_interface
+import backend
 from dataflow.utils import input_protection
 from workers.newfile_filter import NewFile
 
@@ -10,7 +10,7 @@ def file_to_db(input: NewFile):
         url=input.url,
     ))
 
-    flask_interface.file.create(
+    backend.file.create(
         manga_id=input.manga_id,
         file_url=input.url,
         location=input.location,

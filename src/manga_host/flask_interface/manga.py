@@ -1,8 +1,12 @@
 import requests
 import json
 from . import config
+from .common import auth_header
 
-url = config.url + '/manga'
+url = 'http://{hostname}:{port}/manga'.format(
+    hostname=config.api_hostname,
+    port=config.api_internal_port,
+)
 
 
 def create(name, author, link):
@@ -17,7 +21,7 @@ def create(name, author, link):
         'link': link,
     }.items() if value is not None}
 
-    response = requests.put(url=url, params=params)
+    response = requests.put(url=url, params=params, headers=auth_header)
 
     jsn = json.loads(response.text)
 
@@ -32,7 +36,7 @@ def read(manga_id):
         'id': str(manga_id),
     }.items() if value is not None}
 
-    response = requests.get(url=url, params=params)
+    response = requests.get(url=url, params=params, headers=auth_header)
 
     jsn = json.loads(response.text)
 
@@ -51,7 +55,7 @@ def update(manga_id, name=None, author=None, link=None, active=None):
         'active': active,
     }.items() if value is not None}
 
-    response = requests.patch(url=url, params=params)
+    response = requests.patch(url=url, params=params, headers=auth_header)
 
     jsn = json.loads(response.text)
 
@@ -66,7 +70,7 @@ def delete(manga_id):
         'id': manga_id,
     }.items() if value is not None}
 
-    response = requests.delete(url=url, params=params)
+    response = requests.delete(url=url, params=params, headers=auth_header)
 
     jsn = json.loads(response.text)
 
@@ -88,10 +92,7 @@ def index():
     params = {key: value for key, value in {
     }.items() if value is not None}
 
-    response = requests.request(method='VIEW', url=url, params=params)
-    print(response.text)
-    print(url)
-    print(params)
+    response = requests.request(method='VIEW', url=url, params=params, headers=auth_header)
 
     jsn = json.loads(response.text)
 

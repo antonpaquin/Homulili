@@ -8,6 +8,7 @@ from standard_request import standard_request
 import db
 import validator
 import formatter
+import security
 
 import config
 import route_commands
@@ -23,6 +24,7 @@ def standard_route(param_map, route_validator, route_db, route_formatter, comman
         'PATCH': 'update',
         'DELETE': 'delete',
         'VIEW': 'index',
+        'POST': 'command',
     }
 
     if request.method == 'OPTIONS':
@@ -32,13 +34,16 @@ def standard_route(param_map, route_validator, route_db, route_formatter, comman
         ]))
         return response
 
-    if commands and request.method == 'POST':
-        return commands()
-
     if request.method not in method_map:
         return 'Invalid method'
 
     method = method_map[request.method]
+
+    if not security.authenticate(method):
+        return security.err_response(method)
+
+    if commands and method == 'command':
+        return commands()
 
     params = {}
     for key, value in param_map[method].items():
@@ -127,7 +132,7 @@ def page():
             'create': {
                 'chapter_id': 'chapter_id',
                 'sort_key': 'sort_key',
-                'file_name': 'file',
+                'file_id': 'file',
             },
             'read': {
                 'page_id': 'id',
@@ -194,7 +199,11 @@ def file():
 # noinspection PyTypeChecker
 @app.route('/pagedata', methods=['GET', 'PUT', 'DELETE', 'OPTIONS', 'POST'])
 def pagedata():
+    auth_token = request.headers.get('auth_token')
+
     if request.method == 'PUT':
+        if not security.authenticate('create'):
+            return security.err_response('create')
         return standard_request(
             params={
                 'page_id': request.args.get('page_id'),
@@ -206,6 +215,8 @@ def pagedata():
         )
 
     elif request.method == 'GET':
+        if not security.authenticate('read'):
+            return security.err_response('read')
         response = flask.Response()
         try:
             args = {'page_id': int(request.args.get('page_id'))}
@@ -220,6 +231,8 @@ def pagedata():
             return response
 
     elif request.method == 'DELETE':
+        if not security.authenticate('delete'):
+            return security.err_response('delete')
         return standard_request(
             params={
                 'page_id': request.args.get('page_id'),

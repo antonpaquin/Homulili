@@ -2,12 +2,12 @@ from .common import conn, update_not_null
 
 
 # noinspection PyUnboundLocalVariable
-def create(chapter_id, sort_key=0, file_name=None):
+def create(chapter_id, sort_key=0, file_id=None):
     with conn.cursor() as cur:
         try:
             cur.execute(
-                'INSERT INTO pages (chapter_id, sort_key, file_name) VALUES (%s, %s, %s)',
-                (chapter_id, sort_key, file_name),
+                'INSERT INTO pages (chapter_id, sort_key, file_id) VALUES (%s, %s, %s)',
+                (chapter_id, sort_key, file_id),
             )
         except Exception as e:
             conn.rollback()

@@ -7,7 +7,7 @@ if [ ! -e /var/run/homulili ]; then
 fi
 
 if [ -e /var/run/homulili/parser.pid ]; then
-    parser_pid=$(cat /var/run/parser.pid)
+    parser_pid=$(cat /var/run/homulili/parser.pid)
 else
     parser_pid="none"
 fi

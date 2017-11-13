@@ -1,6 +1,6 @@
 from queue import Queue
 
-import flask_interface
+import backend
 from dataflow.utils import input_protection
 
 
@@ -12,11 +12,11 @@ class HeadUrl:
 
 @input_protection(num_inputs=0)
 def head_url(output: Queue):
-    data = flask_interface.manga.index()
+    data = backend.manga.index()
     all_manga_ids = [row['id'] for row in data]
 
     for manga_id in all_manga_ids:
-        data = flask_interface.manga.read(manga_id=manga_id)
+        data = backend.manga.read(manga_id=manga_id)
         output.put(HeadUrl(
             manga_id=manga_id,
             url=data['madokami_url']

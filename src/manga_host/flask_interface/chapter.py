@@ -1,8 +1,13 @@
 import requests
 import json
 from . import config
+from .common import auth_header, auth_token
 
-url = config.url + '/chapter'
+
+url = 'http://{hostname}:{port}/chapter'.format(
+    hostname=config.api_hostname,
+    port=config.api_internal_port,
+)
 
 
 def create(manga_id, name, sort_key):
@@ -12,7 +17,7 @@ def create(manga_id, name, sort_key):
         'sort_key': sort_key,
     }.items() if value is not None}
 
-    response = requests.put(url=url, params=params)
+    response = requests.put(url=url, params=params, headers=auth_header)
 
     jsn = json.loads(response.text)
 
@@ -27,7 +32,7 @@ def read(chapter_id):
         'id': chapter_id,
     }.items() if value is not None}
 
-    response = requests.get(url=url, params=params)
+    response = requests.get(url=url, params=params, headers=auth_header)
 
     jsn = json.loads(response.text)
 
@@ -45,7 +50,7 @@ def update(chapter_id, name=None, manga_id=None, sort_key=None):
         'sort_key': sort_key,
     }.items() if value is not None}
 
-    response = requests.patch(url=url, params=params)
+    response = requests.patch(url=url, params=params, headers=auth_header)
 
     jsn = json.loads(response.text)
 
@@ -60,7 +65,7 @@ def delete(chapter_id):
         'id': chapter_id,
     }.items() if value is not None}
 
-    response = requests.delete(url=url, params=params)
+    response = requests.delete(url=url, params=params, headers=auth_header)
 
     jsn = json.loads(response.text)
 
@@ -84,7 +89,7 @@ def index(manga_id):
         'manga_id': manga_id,
     }.items() if value is not None}
 
-    response = requests.request(method='VIEW', url=url, params=params)
+    response = requests.request(method='VIEW', url=url, params=params, headers=auth_header)
 
     jsn = json.loads(response.text)
 
@@ -101,6 +106,7 @@ def reorder(chapter_ids):
 
     headers = {
         "Content-Type": "application/json",
+        "auth_token": auth_token,
     }
 
     response = requests.post(url=url, params=params, headers=headers, data=json.dumps(chapter_ids))

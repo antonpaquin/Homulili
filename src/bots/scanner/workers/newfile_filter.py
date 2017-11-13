@@ -2,7 +2,7 @@ from datetime import datetime, timedelta
 from queue import Queue
 from urllib.request import unquote
 
-import flask_interface
+import backend
 from dataflow.utils import input_protection
 from workers.node_url import NodeUrl
 
@@ -39,7 +39,7 @@ def fetch_manga(manga_id):
     if manga_id not in downloaded_files:
         downloaded_files[manga_id] = set()
 
-    data = flask_interface.file.index(manga_id=manga_id)
+    data = backend.file.index(manga_id=manga_id)
     for row in data:
         downloaded_files[manga_id].add(unquote(row['url']))
 
