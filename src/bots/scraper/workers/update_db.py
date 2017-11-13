@@ -6,6 +6,7 @@ from .common import File
 
 @input_protection()
 def update_db(input: File):
+    print('Enter update_db')
     backend.file.update(
         file_id=input.file_id,
         manga_id=input.manga_id,

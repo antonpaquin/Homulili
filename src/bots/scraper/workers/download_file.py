@@ -19,6 +19,7 @@ pyfs = OSFS(config.storage_dir)
 
 @input_protection()
 def download_file(input: File, output: Queue):
+    print('Enter download file')
     subdir = fs.path.join(*fs.path.split(input.location)[:-1])
     if not pyfs.isdir(subdir):
         pyfs.makedirs(subdir)
@@ -32,11 +33,12 @@ def download_file(input: File, output: Queue):
         manga_id=input.manga_id,
         name=input.location,
     ))
-    data = requests.get(url=input.url, auth=madokami_auth)
+    data = requests.get(url=input.url, auth=madokami_auth, stream=True)
     print('Download complete')
 
     with pyfs.open(input.location, 'wb') as data_f:
-        data_f.write(data.content)
+        for block in data.iter_content(1024):
+            data_f.write(block)
 
     input.downloaded = True
 

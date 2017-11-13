@@ -8,6 +8,7 @@ from .common import File
 
 @input_protection()
 def urls_from_db(input: int, output: Queue):
+    print('Enter urls_from_db')
     data = backend.file.index(input)
     for file_json in data:
         output.put(File(
