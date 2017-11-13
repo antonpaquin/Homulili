@@ -5,3 +5,4 @@ fs>=2.0.12
 Jinja2>=2.9.6
 psycopg2>=2.7.3.2
 requests>=2.10.0
+cryptography>=1.7.1
