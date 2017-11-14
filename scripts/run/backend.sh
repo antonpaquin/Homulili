@@ -21,7 +21,9 @@ if [ "$1" == "start" ]; then
     if [ ! -e /proc/$PID -a /proc/$PID/exe ]; then
         pushd $SRCDIR
         python3 $SRCFILE &
-        echo $! > $PIDFILE
+        PID=$!
+        echo $PID > $PIDFILE
+        renice 10 -p $PID
         popd
     else
         echo "Already running"
@@ -41,10 +43,11 @@ if [ "$1" == "restart" ]; then
         kill $PID
         pushd $SRCDIR
         python3 $SRCFILE &
-        echo $! > $PIDFILE
+        PID=$!
+        echo $PID > $PIDFILE
+        renice 10 -p $PID
         popd
     else
         echo "Process not running";
     fi
 fi
-
