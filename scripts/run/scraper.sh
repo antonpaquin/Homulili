@@ -1,19 +1,39 @@
 #! /bin/bash
 
 DOCROOT=$(pwd)/../../
+PIDDIR="/var/run/homulili"
+PIDFILE="$PIDDIR/scraper.pid"
+SRCDIR=$DOCROOT/src/bots/scraper
+SRCFILE=main.py
 
-if [ ! -e /var/run/homulili ]; then
+
+if [ ! -e $PIDDIR ]; then
     exit 1
 fi
 
-if [ -e /var/run/homulili/scraper.pid ]; then
-    scraper_pid=$(cat /var/run/homulili/scraper.pid)
+if [ -e $PIDFILE ]; then
+    PID=$(cat $PIDFILE)
 else
-    scraper_pid="none"
+    PID="none"
 fi
-if [ ! -e /proc/$scraper_pid -a /proc/$scraper_pid/exe ]; then
-    pushd $DOCROOT/src/bots/scraper/
-    python3 main.py &
-    echo $! > /var/run/homulili/scraper.pid
+
+if [ "$1" == "start" ]; then
+    if [ ! -e /proc/$PID -a /proc/$PID/exe ]; then
+        pushd $SRCDIR
+        python3 $SRCFILE &
+        echo $! > $PIDFILE
+        popd
+    fi
+fi
+
+if [ "$1" == "stop" ]; then
+    kill $PID
+fi
+
+if [ "$1" == "restart" ]; then
+    kill $PID
+    pushd $SRCDIR
+    python3 $SRCFILE &
+    echo $! > $PIDFILE
     popd
 fi

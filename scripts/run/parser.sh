@@ -1,19 +1,39 @@
 #! /bin/bash
 
 DOCROOT=$(pwd)/../../
+PIDDIR="/var/run/homulili"
+PIDFILE="$PIDDIR/parser.pid"
+SRCDIR=$DOCROOT/src/bots/parser
+SRCFILE=main.py
 
-if [ ! -e /var/run/homulili ]; then
+
+if [ ! -e $PIDDIR ]; then
     exit 1
 fi
 
-if [ -e /var/run/homulili/parser.pid ]; then
-    parser_pid=$(cat /var/run/homulili/parser.pid)
+if [ -e $PIDFILE ]; then
+    PID=$(cat $PIDFILE)
 else
-    parser_pid="none"
+    PID="none"
 fi
-if [ ! -e /proc/$parser_pid -a /proc/$parser_pid/exe ]; then
-    pushd $DOCROOT/src/bots/parser
-    python3 main.py &
-    echo $! > /var/run/homulili/parser.pid
+
+if [ "$1" == "start" ]; then
+    if [ ! -e /proc/$PID -a /proc/$PID/exe ]; then
+        pushd $SRCDIR
+        python3 $SRCFILE &
+        echo $! > $PIDFILE
+        popd
+    fi
+fi
+
+if [ "$1" == "stop" ]; then
+    kill $PID
+fi
+
+if [ "$1" == "restart" ]; then
+    kill $PID
+    pushd $SRCDIR
+    python3 $SRCFILE &
+    echo $! > $PIDFILE
     popd
 fi

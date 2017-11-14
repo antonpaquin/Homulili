@@ -34,11 +34,10 @@ def download_file(input: File, output: Queue):
         name=input.location,
     ))
     data = requests.get(url=input.url, auth=madokami_auth, stream=True)
-    print('Download complete')
-
     with pyfs.open(input.location, 'wb') as data_f:
         for block in data.iter_content(1024):
             data_f.write(block)
+    print('Download complete')
 
     input.downloaded = True
 

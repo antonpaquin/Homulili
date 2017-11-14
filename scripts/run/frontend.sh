@@ -1,19 +1,39 @@
 #! /bin/bash
 
 DOCROOT=$(pwd)/../../
+PIDDIR="/var/run/homulili"
+PIDFILE="$PIDDIR/frontend.pid"
+SRCDIR=$DOCROOT/src/frontend/flask
+SRCFILE=route.py
 
-if [ ! -e /var/run/homulili ]; then
+
+if [ ! -e $PIDDIR ]; then
     exit 1
 fi
 
-if [ -e /var/run/homulili/frontend.pid ]; then
-    frontend_pid=$(cat /var/run/homulili/frontend.pid)
+if [ -e $PIDFILE ]; then
+    PID=$(cat $PIDFILE)
 else
-    frontend_pid="none"
+    PID="none"
 fi
-if [ ! -e /proc/$frontend_pid -a /proc/$frontend_pid/exe ]; then
-    pushd $DOCROOT/src/frontend/flask
-    python3 route.py &
-    echo $! > /var/run/homulili/frontend.pid
+
+if [ "$1" == "start" ]; then
+    if [ ! -e /proc/$PID -a /proc/$PID/exe ]; then
+        pushd $SRCDIR
+        python3 $SRCFILE &
+        echo $! > $PIDFILE
+        popd
+    fi
+fi
+
+if [ "$1" == "stop" ]; then
+    kill $PID
+fi
+
+if [ "$1" == "restart" ]; then
+    kill $PID
+    pushd $SRCDIR
+    python3 $SRCFILE &
+    echo $! > $PIDFILE
     popd
 fi

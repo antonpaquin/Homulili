@@ -1,19 +1,50 @@
 #! /bin/bash
 
 DOCROOT=$(pwd)/../../
+PIDDIR="/var/run/homulili"
+PIDFILE="$PIDDIR/backend.pid"
+SRCDIR=$DOCROOT/src/manga_host/flask
+SRCFILE=route.py
 
-if [ ! -e /var/run/homulili ]; then
+
+if [ ! -e $PIDDIR ]; then
     exit 1
 fi
 
-if [ -e /var/run/homulili/backend.pid ]; then
-    backend_pid=$(cat /var/run/homulili/backend.pid)
+if [ -e $PIDFILE ]; then
+    PID=$(cat $PIDFILE)
 else
-    backend_pid="none"
+    PID="none"
 fi
-if [ ! -e /proc/$backend_pid -a /proc/$backend_pid/exe ]; then
-    pushd $DOCROOT/src/manga_host/flask
-    python3 route.py &
-    echo $! > /var/run/homulili/backend.pid
-    popd
+
+if [ "$1" == "start" ]; then
+    if [ ! -e /proc/$PID -a /proc/$PID/exe ]; then
+        pushd $SRCDIR
+        python3 $SRCFILE &
+        echo $! > $PIDFILE
+        popd
+    else
+        echo "Already running"
+    fi
 fi
+
+if [ "$1" == "stop" ]; then
+    if [ -e /proc/$PID -a /proc/$PID/exe ]; then
+        kill $PID
+    else
+        echo "Process not running";
+    fi
+fi
+
+if [ "$1" == "restart" ]; then
+    if [ -e /proc/$PID -a /proc/$PID/exe ]; then
+        kill $PID
+        pushd $SRCDIR
+        python3 $SRCFILE &
+        echo $! > $PIDFILE
+        popd
+    else
+        echo "Process not running";
+    fi
+fi
+
