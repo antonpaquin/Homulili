@@ -19,7 +19,6 @@ pyfs = OSFS(config.storage_dir)
 
 @input_protection()
 def download_file(input: File, output: Queue):
-    print('Enter download file')
     subdir = fs.path.join(*fs.path.split(input.location)[:-1])
     if not pyfs.isdir(subdir):
         pyfs.makedirs(subdir)
