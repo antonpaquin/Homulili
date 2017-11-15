@@ -30,6 +30,7 @@
                         split_ids.push(ids[j].attributes.key.value);
                     }
                 }
+                var req = new XMLHttpRequest();
                 req.open('POST', '/page/rechapter_target');
                 req.setRequestHeader('Content-Type', 'application/json');
                 req.send(JSON.stringify({
