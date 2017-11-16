@@ -15,9 +15,9 @@ df = DataFlow()
 x = df.rate_limited_node(interval=master_interval, target=get_manga_ids)
 x = df.node(input=x.out, target=files_from_db)
 x = df.node(input=x.out, target=unzip)
-x.out.maxsize = 1
+x.out[0].maxsize = 1
 x = df.node(input=x.out, target=chapter_to_db)
-x.out.maxsize = 3
+x.out[0].maxsize = 3
 x = df.node(input=x.out, target=page_to_db, num_outputs=0)
 
 df.run()
