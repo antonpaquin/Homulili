@@ -11,8 +11,9 @@ def chapter_route_index():
         return '', 400
 
     manga_id = request.args.get('manga_id')
+    manga = backend.manga.read(manga_id)
     chapters = backend.chapter.index(manga_id)
-    return render_template('chapter_index', manga_id=manga_id, chapters=chapters)
+    return render_template('chapter_index', manga=manga, chapters=chapters)
 
 
 @authenticated

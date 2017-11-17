@@ -1,15 +1,23 @@
 <html>
 <head>
+    <link rel="stylesheet" type="text/css" href="/css/chapter_index"/>
     <script type="text/javascript" src="/lib/jquery-3.2.1.min.js"></script>
 </head>
 
 <body>
-<a href="/manga">Back</a>
+<div id="navlink">
+    <a href="/">/</a>
+    <a href="/manga">Manga</a>
+    <p>/</p>
+    <a href="/chapter/index?manga_id={{ manga['id'] }}">{{ manga['name'] }}</a>
+</div>
+
+<div id="table-container">
 <table>
-    <tr>
-        <td>id</td>
-        <td>name</td>
-        <td>sort_key</td>
+    <tr class="table-header">
+        <td>Id</td>
+        <td>Name</td>
+        <td>Sort Key</td>
     </tr>
 {% for chapter in chapters %}
     <tr>
@@ -17,25 +25,42 @@
             <idcontainer key="{{ chapter['id'] }}">{{ chapter['id'] }}</idcontainer>
         </td>
         <td>
-            <a href="/page/display?chapter_id={{ chapter['id'] }}">{{ chapter['name'] }}</a>
+            <a id="chapter-link-{{ chapter['id'] }}" href="/page/display?chapter_id={{ chapter['id'] }}">
+                {{ chapter['name'] }}
+            </a>
         </td>
         <td>
-            {{ (chapter['sort_key']|string).rstrip('0').rstrip('.') }}
+            <span id="chapter-sortkey-{{ chapter['id'] }}">{{ (chapter['sort_key']|string).rstrip('0').rstrip('.') }}</span>
         </td>
         <td>
-            <input type="button" value="delete" intent="delete" key="{{ chapter['id'] }}">
+            <div id="btn-delete-{{ chapter['id'] }}" class="btn btn-delete">
+                <input type="button" class="passive" value="Delete">
+                <input type="button" class="active" value="Confirm?">
+            </div>
         </td>
         <td>
-            <input type="text" id="rename-{{ chapter['id'] }}" placeholder="{{ chapter['name'] }}">
-            <input type="button" value="rename" intent="rename" key="{{ chapter['id'] }}">
+            <div id="btn-rename-{{ chapter['id'] }}" class="btn btn-rename">
+                <input type="button" class="passive" value="Rename">
+                <input type="text" class="active">
+            </div>
         </td>
         <td>
-            <input type="text" id="resort-{{ chapter['id'] }}" placeholder="{{ chapter['sort_key'] }}">
-            <input type="button" value="resort" intent="resort" key="{{ chapter['id'] }}">
+            <div id="btn-resort-{{ chapter['id'] }}" class="btn btn-resort">
+                <input type="button" class="passive" value="Resort">
+                <input type="number" class="active">
+            </div>
         </td>
     </tr>
 {% endfor %}
 </table>
+</div>
+<script type="text/javascript">
+    var chapter_ids = [
+        {% for chapter in chapters %}
+        {{ chapter['id'] }},
+        {% endfor %}
+    ];
+</script>
 <script type="text/javascript" src="/js/chapter_index"></script>
 </body>
 </html>
