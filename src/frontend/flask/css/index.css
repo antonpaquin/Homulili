@@ -72,7 +72,7 @@ body::after {
     content: "";
     width: 425px;
     height: 601px;
-    position: absolute;
+    position: fixed;
     top: 0;
     right: 0;
     z-index: 1;
@@ -107,7 +107,8 @@ body::after {
     /* Override annoying defaults */
     outline: 0;
     border: 0;
-    background: #0000;
+    background: #171717;
+    border-radius: 6px;
 }
 
 
