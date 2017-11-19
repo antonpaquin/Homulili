@@ -13,18 +13,17 @@ app = Flask(__name__)
 
 app.route('/login')(security.login)
 
-app.route('/manga')(manga.manga_route_root)
-app.route('/manga/create')(manga.manga_route_create)
+app.route('/manga')(manga.manga_route_index)
+app.route('/manga/create_target')(manga.manga_route_create_target)
+app.route('/manga/rename_target')(manga.manga_route_rename_target)
+app.route('/manga/delete_target')(manga.manga_route_delete_target)
 
 app.route('/chapter/index')(chapter.chapter_route_index)
 app.route('/chapter/rename_target')(chapter.chapter_route_rename_target)
-app.route('/chapter/reorder_target', methods=['POST'])(chapter.chapter_route_reorder_target)
-app.route('/chapter/delete_target')(chapter.chapter_route_delete_target)
 app.route('/chapter/resort_target')(chapter.chapter_route_resort_target)
+app.route('/chapter/delete_target')(chapter.chapter_route_delete_target)
 
-app.route('/page/index')(page.page_route_index)
 app.route('/page/display')(page.page_route_display)
-app.route('/page/rechapter')(page.page_route_rechapter)
 app.route('/page/rechapter_target', methods=['POST'])(page.page_route_rechapter_target)
 
 app.route('/pagedata/display')(pagedata.pagedata_route_display)

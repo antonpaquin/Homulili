@@ -28,12 +28,6 @@ def chapter_route_rename_target():
 
 
 @authenticated
-def chapter_route_reorder_target():
-    backend.chapter.reorder(request.json)
-    return '', 200
-
-
-@authenticated
 def chapter_route_delete_target():
     if 'chapter_id' not in request.args:
         return '', 400

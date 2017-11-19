@@ -1,0 +1,58 @@
+<html>
+<head>
+    <link rel="stylesheet" type="text/css" href="/css/manga_index"/>
+    <link rel="stylesheet" type="text/css" href="/css/index"/>
+</head>
+
+<body>
+<div id="navlink">
+    <a href="/">/</a>
+    <a href="/manga">Manga</a>
+</div>
+<div id="table-container">
+<table id="manga-table">
+    <tr>
+        <td>Id</td>
+        <td>Name</td>
+    </tr>
+{% for m in manga %}
+    <tr>
+        <td>{{ m['id'] }}</td>
+        <td>
+            <a id="manga-link-{{ m['id'] }}" href="/chapter/index?manga_id={{ m['id'] }}">{{ m['name'] }}</a>
+        </td>
+        <td>
+            <div id="btn-delete-{{ m['id'] }}" class="btn btn-delete">
+                <input type="button" class="passive" value="Delete">
+                <input type="button" class="active" value="Confirm?">
+            </div>
+        </td>
+        <td>
+            <div id="btn-rename-{{ m['id'] }}" class="btn btn-rename">
+                <input type="button" class="passive" value="Rename">
+                <input type="text" class="active">
+            </div>
+        </td>
+    </tr>
+{% endfor %}
+</table>
+<div id="create-inputs">
+    <input id="btn-create-name" type="text" placeholder="Name">
+    <input id="btn-create-author" type="text" placeholder="Author">
+    <input id="btn-create-link" type="text" placeholder="Madokami Link">
+</div>
+<div id="btn-create" class="btn">
+    <input id="btn-create-create" class="passive" type="button" value="Create">
+    <input id="btn-create-cancel" class="active" type="button" value="Cancel">
+</div>
+</div>
+<script type="text/javascript">
+    var manga_ids = [
+        {% for m in manga %}
+            {{ m['id'] }},
+        {% endfor %}
+    ];
+</script>
+<script type="text/javascript" src="/js/manga_index"></script>
+</body>
+</html>

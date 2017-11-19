@@ -7,16 +7,6 @@ import config
 
 
 @authenticated
-def page_route_index():
-    if 'chapter_id' not in request.args:
-        return 'none'
-
-    chapter_id = request.args.get('chapter_id')
-    pages = backend.page.index(chapter_id)
-    return render_template('page_index', pages=pages, chapter_id=chapter_id)
-
-
-@authenticated
 def page_route_display():
     if 'chapter_id' not in request.args:
         return 'none'
@@ -26,17 +16,6 @@ def page_route_display():
     pages = backend.page.index(chapter_id)
     return render_template('page_display', pages=pages, chapter=chapter,
                            api_hostname=config.api_hostname, api_public_port=config.api_public_port)
-
-
-@authenticated
-def page_route_rechapter():
-    if 'chapter_id' not in request.args:
-        return 'none'
-
-    chapter_id = request.args.get('chapter_id')
-    pages = backend.page.index(chapter_id)
-    chapter = backend.chapter.read(chapter_id)
-    return render_template('page_rechapter', pages=pages, chapter=chapter)
 
 
 @authenticated

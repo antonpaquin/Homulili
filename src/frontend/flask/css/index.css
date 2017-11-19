@@ -1,0 +1,155 @@
+/* Global defaults */
+body {
+    --color-primary: #C969E9;
+    --color-secondary: #b2b2b2;
+
+    background: #171717;
+    color: var(--color-secondary);
+    padding: 20px;
+}
+
+body, input {
+    font-family: 'Open Sans', 'ï¼­ï¼³ ï¼°ã‚´ã‚·ãƒƒã‚¯', sans-serif;
+    font-size: 16px;
+    font-weight: 300;
+}
+
+a {
+    color: var(--color-primary);
+    text-decoration: none;
+}
+
+
+/* Style table */
+#table-container {
+    padding: 30px;
+    display: inline-block;
+    box-shadow: 0 0 6px -2px rgba(237, 237, 237, 0.2);
+    background: rgba(27, 27, 27, 1.0);
+    margin: 0 0 30px;
+    position: relative;
+}
+
+table {
+    border-spacing: 0;
+}
+
+tr {
+    background-color: rgba(27, 27, 27, 1.0);
+    z-index: 2;
+    height: 54px;
+}
+
+tr:hover {
+    background: #2b2b2b;
+}
+
+td {
+    padding-left: 10px;
+    padding-right: 10px;
+    z-index: 2;
+}
+
+tr:first-of-type td {
+    color: var(--color-primary);
+}
+
+/* Links at top */
+#navlink a, #navlink p {
+    display: inline-block;
+    font-size: 32px;
+    margin-right: 10px;
+    margin-top: 32px;
+    margin-bottom: 32px;
+}
+
+#navlink a:hover {
+    text-decoration: underline;
+}
+
+/* floaty homura */
+body::after {
+    content: "";
+    width: 425px;
+    height: 601px;
+    position: absolute;
+    top: 0;
+    right: 0;
+    z-index: 1;
+    background: url('/lib/images/homura_b.png') no-repeat center;
+    background-size: 100%;
+}
+
+/* Style the nice button things */
+.btn {
+    border-radius: 6px;
+
+    /* Sizing */
+    position: relative;
+    width: 120px;
+    height: 30px;
+
+    margin: 10px;
+    z-index: 2;
+}
+
+.btn input {
+    /* Stack the two buttons on top of each other */
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 120px;
+    height: 30px;
+
+    /* style text */
+    text-align: center;
+
+    /* Override annoying defaults */
+    outline: 0;
+    border: 0;
+    background: #0000;
+}
+
+
+/* Selectors for when things are clicked and unclicked */
+.btn.focus .passive, .btn:not(.focus) .active {
+    opacity: 0;
+    transition: opacity 0.1s linear;
+}
+
+.btn:not(.focus) .passive, .btn.focus .active {
+    opacity: 1;
+    transition: opacity 0.1s linear;
+}
+
+.deleted td {
+    opacity: 0.3;
+    transition: opacity 0.5s linear;
+}
+
+/* Border colors change on hover/select */
+.btn {
+    border: 1px solid var(--color-secondary);
+    transition: border 0.1s linear;
+}
+
+.btn input {
+    color: var(--color-secondary);
+    transition: color 0.1s linear;
+}
+
+.btn:hover, .btn.focus {
+    border: 1px solid var(--color-primary);
+    transition: border 0.1s linear;
+}
+
+.btn:hover input, .btn.focus input {
+    color: var(--color-primary);
+    transition: color 0.1s linear;
+}
+
+/* Cursor change for button things */
+
+.passive, .btn-delete .active {
+    cursor: pointer;
+}

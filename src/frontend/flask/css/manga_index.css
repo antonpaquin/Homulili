@@ -1,0 +1,58 @@
+#btn-create {
+    margin: 30px 10px 10px 10px;
+}
+
+#create-inputs input {
+    border-radius: 6px;
+
+    /* Sizing */
+    width: 122px;
+    height: 32px;
+
+    padding: 1px 6px;
+
+    outline: 0;
+    background: #0000;
+    text-align: center;
+
+    z-index: 2;
+}
+
+#create-inputs input {
+    margin-left: 10px;
+}
+
+#create-inputs.active {
+    max-height: 40px;
+    overflow: hidden;
+    transition: max-height 0.1s linear;
+}
+
+#create-inputs:not(.active) {
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.1s;
+}
+
+#create-inputs input:not(.focus) {
+    border: 1px solid var(--color-secondary);
+    color: var(--color-secondary);
+    transition: border 0.1s linear, color 0.1s linear;
+}
+
+#create-inputs input.focus {
+    border: 1px solid var(--color-primary);
+    color: var(--color-primary);
+    transition: border 0.1s linear, color 0.1s linear;
+}
+
+#btn-create-cancel {
+    color: var(--color-secondary);
+    transition: color 0.1s linear;
+    cursor: pointer;
+}
+
+#btn-create.focus {
+    border: 1px solid var(--color-secondary);
+    transition: border 0.1s linear;
+}
