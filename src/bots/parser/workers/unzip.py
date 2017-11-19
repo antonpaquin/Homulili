@@ -37,6 +37,7 @@ def unzip(input: File, output: Queue):
         unzippers.chapters_in_subdirectories,
         unzippers.zip_containing_zips,
         unzippers.single_chapter,
+        unzippers.chapters_in_subdirectories_with_credits
     ]
 
     success = False
