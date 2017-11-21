@@ -1,4 +1,3 @@
-from queue import Queue
 import logging
 
 from dataflow.utils import input_protection
@@ -20,7 +19,7 @@ def chapter_to_db(input: Chapter):
     )['id']
 
     logger.info(
-        'Added new chapter ({sort_key}) with id ({chapter_id}) to manga ({manga_id}) with ({num_pages}) pages'.format(
+        'Added new chapter ({sort_key}) with id ({chapter_id}) to manga ({manga_id})'.format(
             sort_key=input.sort_key,
             chapter_id=chapter_id,
             manga_id=input.manga_id,

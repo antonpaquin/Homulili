@@ -25,11 +25,12 @@ def unzip(input: File, output_chapter: Queue, output_page: Queue):
 
     --
 
-    The chapter/page actors will need to do some state magic to ensure
-    pages only get sent after a chapter is sent
-
-
     """
+    # Precheck: make sure that the file is still unparsed as we expect
+    file = backend.file.read(file_id=input.file_id)
+    if file['parsed']:
+        return
+
     zipfile_f = root_filestore.open(input.location, 'rb')
     zipfile = zipfs.ReadZipFS(zipfile_f)
 
@@ -44,14 +45,14 @@ def unzip(input: File, output_chapter: Queue, output_page: Queue):
 
     for strategy in unzip_strategies:
         if strategy.match(zipfile):
+            backend.file.update(file_id=input.file_id, parsed=True)
             success = strategy.process(input, zipfile, output_chapter, output_page)
 
         if success:
             break
 
-    if success:
-        backend.file.update(file_id=input.file_id, parsed=True)
-    else:
+    if not success:
+        backend.file.update(file_id=input.file_id, parsed=False)
         print('Failed unzipping {file}'.format(file=input.location))
 
 
