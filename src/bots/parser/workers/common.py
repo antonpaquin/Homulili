@@ -12,10 +12,6 @@ class Chapter:
         self.sort_key = sort_key
 
         self.chapter_id = None
-        self.pages = []
-
-    def add_page(self, page):
-        self.pages.append(page)
 
 
 class Page:

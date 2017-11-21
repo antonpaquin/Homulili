@@ -17,7 +17,7 @@ data_filestore = fs.path.join('/data', 'raw_files')
 
 
 @input_protection()
-def unzip(input: File, output: Queue):
+def unzip(input: File, output_chapter: Queue, output_page: Queue):
     """
     First, open the file and try to guess what chapters it contains.
     Emit a chapter object for each chapter.
@@ -44,7 +44,7 @@ def unzip(input: File, output: Queue):
 
     for strategy in unzip_strategies:
         if strategy.match(zipfile):
-            success = strategy.process(input, zipfile, output)
+            success = strategy.process(input, zipfile, output_chapter, output_page)
 
         if success:
             break

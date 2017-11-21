@@ -14,7 +14,7 @@ def match(zipfile: zipfs.ReadZipFS):
     return True
 
 
-def process(input: File, zipfile: zipfs.ReadZipFS, output: Queue):
+def process(input: File, zipfile: zipfs.ReadZipFS, output_chapter: Queue, output_page: Queue):
     filename = fs.path.split(input.location)[-1]
     chapter_number = guess_chapter(filename)
     chapter = Chapter(
@@ -22,20 +22,23 @@ def process(input: File, zipfile: zipfs.ReadZipFS, output: Queue):
         name=str(chapter_number),
         sort_key=chapter_number,
     )
+
+    output_chapter.put(chapter)
+
     pages = zipfile.listdir('/')
     pages.sort()
-    for idx, page in enumerate(pages):
-        with zipfile.open(fs.path.join('/', page), 'rb') as page_f:
+    for idx, pagename in enumerate(pages):
+        with zipfile.open(fs.path.join('/', pagename), 'rb') as page_f:
             # noinspection PyUnresolvedReferences
             data = page_f.read()
 
-        chapter.add_page(Page(
+        page = Page(
             chapter=chapter,
             sort_key=idx,
             file_id=input.file_id,
             data=data,
-        ))
+        )
 
-    output.put(chapter)
+        output_page.put(page)
 
     return True

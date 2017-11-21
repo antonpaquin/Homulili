@@ -35,7 +35,7 @@ def match(zipfile: zipfs.ReadZipFS):
     return True
 
 
-def process(input: File, zipfile: zipfs.ReadZipFS, output: Queue):
+def process(input: File, zipfile: zipfs.ReadZipFS, output_chapter: Queue, output_page: Queue):
     for subdir in zipfile.listdir('/'):
         if zipfile.isfile(subdir):
             continue
@@ -47,20 +47,22 @@ def process(input: File, zipfile: zipfs.ReadZipFS, output: Queue):
             sort_key=chapter_number,
         )
 
+        output_chapter.put(chapter)
+
         pages = zipfile.listdir(subdir)
         pages.sort()
-        for idx, page in enumerate(pages):
-            with zipfile.open(fs.path.join('/', subdir, page), 'rb') as page_f:
+        for idx, pagename in enumerate(pages):
+            with zipfile.open(fs.path.join('/', subdir, pagename), 'rb') as page_f:
                 # noinspection PyUnresolvedReferences
                 data = page_f.read()
 
-            chapter.add_page(Page(
+            page = Page(
                 chapter=chapter,
                 sort_key=idx,
                 file_id=input.file_id,
                 data=data,
-            ))
+            )
 
-        output.put(chapter)
+            output_page.put(page)
 
     return True
