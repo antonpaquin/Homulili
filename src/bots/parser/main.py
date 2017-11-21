@@ -12,7 +12,6 @@ logging.basicConfig(
     datefmt='%Y-%m-%d %H:%M:%S',
     filename='/var/log/homulili/parser.log',
     filemode='w',
-    handlers=[logging.FileHandler('/var/log/homulili/parser')]
 )
 logger = logging.getLogger(__name__)
 

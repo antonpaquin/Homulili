@@ -12,6 +12,7 @@ class Chapter:
         self.sort_key = sort_key
 
         self.chapter_id = None
+        self.num_pages = 0
 
 
 class Page:

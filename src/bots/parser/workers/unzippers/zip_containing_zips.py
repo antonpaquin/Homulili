@@ -56,6 +56,8 @@ def process(input: File, zipfile: zipfs.ReadZipFS, output_chapter: Queue, output
                 data=data,
             )
 
+            chapter.num_pages += 1
+
             output_page.put(page)
 
         tmpfs_f.close()

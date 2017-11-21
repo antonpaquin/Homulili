@@ -24,7 +24,7 @@ def chapter_to_db(input: Chapter):
             sort_key=input.sort_key,
             chapter_id=chapter_id,
             manga_id=input.manga_id,
-            num_pages=len(input.pages),
+            num_pages=input.num_pages,
         )
     )
 
