@@ -36,6 +36,7 @@ def unzip(input: File, output_chapter: Queue, output_page: Queue):
     if not zipfile.is_zipfile(input.location):
         print('Error -- {file} appears to not be a zipfile'.format(
             file=input.location))
+        backend.file.update(file_id=input.file_id, ignore=True)
         return
 
     zip_f = root_filestore.open(input.location, 'rb')
@@ -57,6 +58,8 @@ def unzip(input: File, output_chapter: Queue, output_page: Queue):
 
         if success:
             break
+
+    zip.close()
 
     if not success:
         backend.file.update(file_id=input.file_id, parsed=False)
