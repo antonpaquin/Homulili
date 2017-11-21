@@ -2,6 +2,7 @@ from queue import Queue
 import re
 import fs
 from fs import zipfs, osfs, path
+import zipfile
 
 from dataflow.utils import input_protection
 import backend
@@ -31,8 +32,14 @@ def unzip(input: File, output_chapter: Queue, output_page: Queue):
     if file['parsed']:
         return
 
-    zipfile_f = root_filestore.open(input.location, 'rb')
-    zipfile = zipfs.ReadZipFS(zipfile_f)
+    # Precheck: make sure file is zip
+    if not zipfile.is_zipfile(input.location):
+        print('Error -- {file} appears to not be a zipfile'.format(
+            file=input.location))
+        return
+
+    zip_f = root_filestore.open(input.location, 'rb')
+    zip = zipfs.ReadZipFS(zip_f)
 
     unzip_strategies = [
         unzippers.chapters_in_subdirectories,
@@ -44,9 +51,9 @@ def unzip(input: File, output_chapter: Queue, output_page: Queue):
     success = False
 
     for strategy in unzip_strategies:
-        if strategy.match(zipfile):
+        if strategy.match(zip):
             backend.file.update(file_id=input.file_id, parsed=True)
-            success = strategy.process(input, zipfile, output_chapter, output_page)
+            success = strategy.process(input, zip, output_chapter, output_page)
 
         if success:
             break
