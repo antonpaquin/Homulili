@@ -1,14 +1,19 @@
 from flask import request
+import logging
 
 import backend
 from common import render_template
 from security import authenticated
 import config
 
+logger = logging.getLogger(__name__)
+
 
 @authenticated
 def page_route_display():
+    logger.info('Responding to page::index')
     if 'chapter_id' not in request.args:
+        logger.warning('Insufficient arguments')
         return 'none'
 
     chapter_id = request.args.get('chapter_id')
@@ -20,7 +25,9 @@ def page_route_display():
 
 @authenticated
 def page_route_rechapter_target():
+    logger.info('Responding to page::rechapter')
     if not request.is_json:
+        logger.warning('Rechapter arguments is not JSON')
         return '', 400
 
     new_chapter = backend.chapter.create(

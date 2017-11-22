@@ -1,9 +1,12 @@
 import fs
 from fs import zipfs, path
 from queue import Queue
+import logging
 
 from workers.common import File, Chapter, Page
 from workers.unzippers.common import guess_chapter
+
+logger = logging.getLogger(__name__)
 
 
 def match(zipfile: zipfs.ReadZipFS):
@@ -15,6 +18,7 @@ def match(zipfile: zipfs.ReadZipFS):
 
 
 def process(input: File, zipfile: zipfs.ReadZipFS, output_chapter: Queue, output_page: Queue):
+    logger.debug('Entering single_chapter processing stage')
     filename = fs.path.split(input.location)[-1]
     chapter_number = guess_chapter(filename)
     chapter = Chapter(
@@ -27,6 +31,9 @@ def process(input: File, zipfile: zipfs.ReadZipFS, output_chapter: Queue, output
 
     pages = zipfile.listdir('/')
     pages.sort()
+    logger.info('Chapter has ({num_pages}) pages'.format(
+        num_pages=len(pages),
+    ))
     for idx, pagename in enumerate(pages):
         with zipfile.open(fs.path.join('/', pagename), 'rb') as page_f:
             # noinspection PyUnresolvedReferences

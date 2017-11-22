@@ -1,10 +1,14 @@
 from datetime import datetime, timedelta
 from queue import Queue
 from urllib.request import unquote
+import logging
 
 import backend
 from dataflow.utils import input_protection
 from workers.node_url import NodeUrl
+
+logger = logging.getLogger(__name__)
+
 
 max_fetch_age = timedelta(minutes=30)
 
@@ -23,6 +27,7 @@ class NewFile:
 
 @input_protection()
 def newfile_filter(input: NodeUrl, output: Queue):
+    logger.debug('Entering newfile_filter')
     if input.manga_id not in downloaded_files or \
             datetime.now() - invalidation_timer[input.manga_id] > max_fetch_age:
         fetch_manga(input.manga_id)
@@ -36,6 +41,9 @@ def newfile_filter(input: NodeUrl, output: Queue):
 
 
 def fetch_manga(manga_id):
+    logger.info('Checking for already downloaded files for manga_id {manga_id}'.format(
+        manga_id=manga_id,
+    ))
     if manga_id not in downloaded_files:
         downloaded_files[manga_id] = set()
 

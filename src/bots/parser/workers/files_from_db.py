@@ -15,7 +15,9 @@ def files_from_db(input: int, output: Queue):
 
     data = backend.file.index(input)
 
-    logger.debug('Scanned {length} files')
+    logger.debug('Scanned {length} files'.format(
+        length=len(data),
+    ))
 
     for row in data:
         if not row['parsed'] and not row['ignore'] and row['downloaded']:

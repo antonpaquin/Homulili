@@ -3,6 +3,7 @@ from __future__ import absolute_import
 import flask
 from flask import Flask, request
 import json
+import logging
 
 from standard_request import standard_request
 import db
@@ -13,6 +14,18 @@ import security
 import config
 import route_commands
 
+
+logging.basicConfig(
+    level=logging.DEBUG,
+    format='%(asctime)s %(name)-12s %(levelname)-8s %(message)s',
+    datefmt='%Y-%m-%d %H:%M:%S',
+    filename='/var/log/homulili/backend.log',
+    filemode='w',
+)
+logger = logging.getLogger(__name__)
+
+
+logger.info('Starting backend')
 
 app = Flask(__name__)
 
@@ -28,6 +41,7 @@ def standard_route(param_map, route_validator, route_db, route_formatter, comman
     }
 
     if request.method == 'OPTIONS':
+        logger.info('Handling OPTIONS request')
         response = flask.Response()
         response.headers.set('Allow', ','.join([
             'PUT', 'GET', 'PATCH', 'DELETE', 'VIEW', 'OPTIONS', 'POST',
@@ -35,9 +49,18 @@ def standard_route(param_map, route_validator, route_db, route_formatter, comman
         return response
 
     if request.method not in method_map:
-        return 'Invalid method'
+        logger.warning('Received request with invalid route: {model}::{method}'.format(
+            model=request.path,
+            method=request.method,
+        ))
+        return 'Invalid method', 400
 
     method = method_map[request.method]
+
+    logger.info('Handling request: {model}::{method}'.format(
+        model=request.path,
+        method=method,
+    ))
 
     if not security.authenticate(method):
         return security.err_response(method)
@@ -199,9 +222,11 @@ def file():
 # noinspection PyTypeChecker
 @app.route('/pagedata', methods=['GET', 'PUT', 'DELETE', 'OPTIONS', 'POST'])
 def pagedata():
+    logger.info('Entering pagedata')
     auth_token = request.headers.get('auth_token')
 
     if request.method == 'PUT':
+        logger.info('Handling request pagedata::create')
         if not security.authenticate('create'):
             return security.err_response('create')
         return standard_request(
@@ -215,6 +240,7 @@ def pagedata():
         )
 
     elif request.method == 'GET':
+        logger.info('Handling request pagedata::read (binary)')
         if not security.authenticate('read'):
             return security.err_response('read')
         response = flask.Response()
@@ -226,11 +252,15 @@ def pagedata():
             response.status_code = 200
             return response
         except RuntimeError as e:
+            logger.error('Error in returning page: {err}'.format(
+                err=str(e),
+            ))
             response.set_data(json.dumps({'status': 'database error', 'err_message': str(e)}))
             response.status_code = 500
             return response
 
     elif request.method == 'DELETE':
+        logger.info('Handling request pagedata::delete')
         if not security.authenticate('delete'):
             return security.err_response('delete')
         return standard_request(
@@ -243,7 +273,12 @@ def pagedata():
         )
 
     elif request.method == 'OPTIONS':
-        pass
+        logger.info('Handling request pagedata::options')
+        response = flask.Response()
+        response.headers.set('Allow', ','.join([
+            'PUT', 'GET', 'DELETE',
+        ]))
+        return response
 
 
 if __name__ == '__main__':

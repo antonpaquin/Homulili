@@ -12,8 +12,6 @@ class Chapter:
         self.sort_key = sort_key
 
         self.chapter_id = None
-        self.num_pages = 0
-
 
 class Page:
     def __init__(self, chapter, sort_key, file_id, data):

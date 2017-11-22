@@ -1,12 +1,17 @@
 from flask import request, Response
+import logging
 
 import backend
 from security import authenticated
 
+logger = logging.getLogger(__name__)
+
 
 @authenticated
 def pagedata_route_display():
+    logger.info('Responding to pagedata::display')
     if 'page_id' not in request.args:
+        logger.warning('No page_id in request')
         return '', 400
 
     page_id = request.args.get('page_id')

@@ -1,13 +1,18 @@
 from flask import request
+import logging
 
 import backend
 from common import render_template
 from security import authenticated
 
+logger = logging.getLogger(__name__)
+
 
 @authenticated
 def chapter_route_index():
+    logger.info('Responding to chapter::index')
     if 'manga_id' not in request.args:
+        logger.warning('Insufficient parameters')
         return '', 400
 
     manga_id = request.args.get('manga_id')
@@ -18,7 +23,9 @@ def chapter_route_index():
 
 @authenticated
 def chapter_route_rename_target():
+    logger.info('Responding to chapter::rename')
     if 'chapter_id' not in request.args or 'name' not in request.args:
+        logger.warning('Insufficient parameters')
         return '', 400
 
     chapter_id = request.args.get('chapter_id')
@@ -29,7 +36,9 @@ def chapter_route_rename_target():
 
 @authenticated
 def chapter_route_delete_target():
+    logger.info('Responding to chapter::delete')
     if 'chapter_id' not in request.args:
+        logger.warning('Insufficient parameters')
         return '', 400
 
     chapter_id = request.args.get('chapter_id')
@@ -39,7 +48,9 @@ def chapter_route_delete_target():
 
 @authenticated
 def chapter_route_resort_target():
+    logger.info('Responding to chapter::resort')
     if 'chapter_id' not in request.args:
+        logger.warning('Insufficient parameters')
         return '', 400
 
     chapter_id = request.args.get('chapter_id')

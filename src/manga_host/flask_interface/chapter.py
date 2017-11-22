@@ -1,78 +1,57 @@
-import requests
-import json
-from . import config
-from .common import auth_header, auth_token
+import logging
 
+from .common import standard_request
 
-url = 'http://{hostname}:{port}/chapter'.format(
-    hostname=config.api_hostname,
-    port=config.api_public_port,
-)
+logger = logging.getLogger(__name__)
 
 
 def create(manga_id, name, sort_key):
-    params = {key: value for key, value in {
-        'manga_id': manga_id,
-        'name': name,
-        'sort_key': sort_key,
-    }.items() if value is not None}
-
-    response = requests.put(url=url, params=params, headers=auth_header)
-
-    jsn = json.loads(response.text)
-
-    if jsn['status'] == 'success':
-        return jsn['data']
-    else:
-        raise RuntimeError(jsn)
+    return standard_request(
+        model='chapter',
+        method='create',
+        params={
+            'manga_id': manga_id,
+            'name': name,
+            'sort_key': sort_key,
+        },
+        logger=logger,
+    )
 
 
 def read(chapter_id):
-    params = {key: value for key, value in {
-        'id': chapter_id,
-    }.items() if value is not None}
-
-    response = requests.get(url=url, params=params, headers=auth_header)
-
-    jsn = json.loads(response.text)
-
-    if jsn['status'] == 'success':
-        return jsn['data']
-    else:
-        raise RuntimeError(jsn)
+    return standard_request(
+        model='chapter',
+        method='read',
+        params={
+            'id': chapter_id,
+        },
+        logger=logger,
+    )
 
 
 def update(chapter_id, name=None, manga_id=None, sort_key=None):
-    params = {key: value for key, value in {
-        'id': chapter_id,
-        'name': name,
-        'manga_id': manga_id,
-        'sort_key': sort_key,
-    }.items() if value is not None}
-
-    response = requests.patch(url=url, params=params, headers=auth_header)
-
-    jsn = json.loads(response.text)
-
-    if jsn['status'] == 'success':
-        return jsn['data']
-    else:
-        raise RuntimeError(jsn)
+    return standard_request(
+        model='chapter',
+        method='update',
+        params={
+            'id': chapter_id,
+            'name': name,
+            'manga_id': manga_id,
+            'sort_key': sort_key,
+        },
+        logger=logger,
+    )
 
 
 def delete(chapter_id):
-    params = {key: value for key, value in {
-        'id': chapter_id,
-    }.items() if value is not None}
-
-    response = requests.delete(url=url, params=params, headers=auth_header)
-
-    jsn = json.loads(response.text)
-
-    if jsn['status'] == 'success':
-        return jsn['data']
-    else:
-        raise RuntimeError(jsn)
+    return standard_request(
+        model='chapter',
+        method='delete',
+        params={
+            'id': chapter_id,
+        },
+        logger=logger,
+    )
 
 
 def index(manga_id):
@@ -85,35 +64,11 @@ def index(manga_id):
         },
     ]
     """
-    params = {key: value for key, value in {
-        'manga_id': manga_id,
-    }.items() if value is not None}
-
-    response = requests.request(method='VIEW', url=url, params=params, headers=auth_header)
-
-    jsn = json.loads(response.text)
-
-    if jsn['status'] == 'success':
-        return jsn['data']
-    else:
-        raise RuntimeError(jsn)
-
-
-def reorder(chapter_ids):
-    params = {key: value for key, value in {
-        'command': 'reorder',
-    }.items() if value is not None}
-
-    headers = {
-        "Content-Type": "application/json",
-        "auth_token": auth_token,
-    }
-
-    response = requests.post(url=url, params=params, headers=headers, data=json.dumps(chapter_ids))
-
-    jsn = json.loads(response.text)
-
-    if jsn['status'] == 'success':
-        return jsn['data']
-    else:
-        raise RuntimeError(jsn)
+    return standard_request(
+        model='chapter',
+        method='index',
+        params={
+            'manga_id': manga_id,
+        },
+        logger=logger,
+    )

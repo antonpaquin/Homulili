@@ -1,12 +1,8 @@
-import requests
-import json
-from . import config
-from .common import auth_header
+import logging
 
-url = 'http://{hostname}:{port}/manga'.format(
-    hostname=config.api_hostname,
-    port=config.api_public_port,
-)
+from .common import standard_request
+
+logger = logging.getLogger(__name__)
 
 
 def create(name, author, link):
@@ -15,69 +11,53 @@ def create(name, author, link):
         'id': int,
     }
     """
-    params = {key: value for key, value in {
-        'name': name,
-        'author': author,
-        'link': link,
-    }.items() if value is not None}
-
-    response = requests.put(url=url, params=params, headers=auth_header)
-
-    jsn = json.loads(response.text)
-
-    if jsn['status'] == 'success':
-        return jsn['data']
-    else:
-        raise RuntimeError(jsn)
+    return standard_request(
+        model='manga',
+        method='create',
+        params={
+            'name': name,
+            'author': author,
+            'link': link,
+        },
+        logger=logger,
+    )
 
 
 def read(manga_id):
-    params = {key: value for key, value in {
-        'id': str(manga_id),
-    }.items() if value is not None}
-
-    response = requests.get(url=url, params=params, headers=auth_header)
-
-    jsn = json.loads(response.text)
-
-    if jsn['status'] == 'success':
-        return jsn['data']
-    else:
-        raise RuntimeError(jsn)
+    return standard_request(
+        model='manga',
+        method='read',
+        params={
+            'id': str(manga_id),
+        },
+        logger=logger,
+    )
 
 
 def update(manga_id, name=None, author=None, link=None, active=None):
-    params = {key: value for key, value in {
-        'id': manga_id,
-        'name': name,
-        'author': author,
-        'link': link,
-        'active': active,
-    }.items() if value is not None}
-
-    response = requests.patch(url=url, params=params, headers=auth_header)
-
-    jsn = json.loads(response.text)
-
-    if jsn['status'] == 'success':
-        return jsn['data']
-    else:
-        raise RuntimeError(jsn)
+    return standard_request(
+        model='manga',
+        method='update',
+        params={
+            'id': manga_id,
+            'name': name,
+            'author': author,
+            'link': link,
+            'active': active,
+        },
+        logger=logger,
+    )
 
 
 def delete(manga_id):
-    params = {key: value for key, value in {
-        'id': manga_id,
-    }.items() if value is not None}
-
-    response = requests.delete(url=url, params=params, headers=auth_header)
-
-    jsn = json.loads(response.text)
-
-    if jsn['status'] == 'success':
-        return jsn['data']
-    else:
-        raise RuntimeError(jsn)
+    return standard_request(
+        model='manga',
+        method='delete',
+        params={
+            'id': manga_id,
+        },
+        logger=logger,
+    )
 
 
 def index():
@@ -89,14 +69,10 @@ def index():
         },
     ]
     """
-    params = {key: value for key, value in {
-    }.items() if value is not None}
-
-    response = requests.request(method='VIEW', url=url, params=params, headers=auth_header)
-
-    jsn = json.loads(response.text)
-
-    if jsn['status'] == 'success':
-        return jsn['data']
-    else:
-        raise RuntimeError(jsn)
+    return standard_request(
+        model='manga',
+        method='index',
+        params={
+        },
+        logger=logger,
+    )

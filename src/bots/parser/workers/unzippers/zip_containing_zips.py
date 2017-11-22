@@ -1,9 +1,12 @@
 import fs
 from fs import zipfs, tempfs, path
 from queue import Queue
+import logging
 
 from workers.common import File, Chapter, Page
 from workers.unzippers.common import guess_chapter
+
+logger = logging.getLogger(__name__)
 
 
 def match(zipfile: zipfs.ReadZipFS):
@@ -17,9 +20,13 @@ def match(zipfile: zipfs.ReadZipFS):
 
 
 def process(input: File, zipfile: zipfs.ReadZipFS, output_chapter: Queue, output_page: Queue):
+    logger.debug('Entering zip_containing_zips processing stage')
     unzip_tmpfs = fs.tempfs.TempFS()
-    for subzip in zipfile.listdir('/'):
-        print(subzip)
+    subzips = zipfile.listdir('/')
+    logger.info('Unzipping found ({num_chapters}) chapters'.format(
+        num_chapters=len(subzips),
+    ))
+    for subzip in subzips:
         chapter_number = guess_chapter(subzip)
         chapter = Chapter(
             manga_id=input.manga_id,
@@ -29,9 +36,14 @@ def process(input: File, zipfile: zipfs.ReadZipFS, output_chapter: Queue, output
 
         output_chapter.put(chapter)
 
+        logger.info('Starting to extract subzip to tmpfs')
+
         with zipfile.open(subzip, 'rb') as opened_zip:
             with unzip_tmpfs.open(subzip, 'wb') as tmpfs_f:
                 tmpfs_f.write(opened_zip.read())
+
+        logger.info('Tmpfs extraction successful')
+        logger.info('Starting to read inner zip')
 
         tmpfs_f = unzip_tmpfs.open(subzip, 'rb')
         subdir = zipfs.ReadZipFS(tmpfs_f)
@@ -41,9 +53,13 @@ def process(input: File, zipfile: zipfs.ReadZipFS, output_chapter: Queue, output
         # Hack: if the zip contains a single directory, cd into that one instead
         # Fucking zip maintainers
         if len(pages) == 1 and subdir.isdir(pages[0]):
+            logger.info('Subzip was of a directory containing files -- changing dir')
             pages = [fs.path.join(pages[0], x) for x in subdir.listdir(pages[0])]
 
         pages.sort()
+        logger.info('Chapter has ({num_pages}) pages'.format(
+            num_pages=len(pages),
+        ))
         for idx, pagename in enumerate(pages):
             with subdir.open(fs.path.join('/', pagename), 'rb') as page_f:
                 # noinspection PyUnresolvedReferences

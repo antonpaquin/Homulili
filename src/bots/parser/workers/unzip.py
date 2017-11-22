@@ -1,8 +1,8 @@
 from queue import Queue
-import re
 import fs
 from fs import zipfs, osfs, path
 import zipfile
+import logging
 
 from dataflow.utils import input_protection
 import backend
@@ -11,6 +11,8 @@ from .common import File, Chapter, Page
 import config
 
 import workers.unzippers as unzippers
+
+logger = logging.getLogger(__name__)
 
 # noinspection PyUnresolvedReferences
 root_filestore = osfs.OSFS(config.storage_dir)
@@ -27,14 +29,17 @@ def unzip(input: File, output_chapter: Queue, output_page: Queue):
     --
 
     """
+    logger.debug('Entering unzip')
+
     # Precheck: make sure that the file is still unparsed as we expect
     file = backend.file.read(file_id=input.file_id)
     if file['parsed']:
+        logger.debug('Abandoning file -- it appears to have already been parsed')
         return
 
     # Precheck: make sure file is zip
     if not zipfile.is_zipfile(input.location):
-        print('Error -- {file} appears to not be a zipfile'.format(
+        logger.error('Error -- {file} appears to not be a zipfile, marking for ignore'.format(
             file=input.location))
         backend.file.update(file_id=input.file_id, ignore=True)
         return
@@ -54,34 +59,20 @@ def unzip(input: File, output_chapter: Queue, output_page: Queue):
     for strategy in unzip_strategies:
         if strategy.match(zip):
             backend.file.update(file_id=input.file_id, parsed=True)
+            logger.info('Trying to unzip file {file} with strategy {strategy}'.format(
+                file=input.location,
+                strategy=strategy.__name__,
+            ))
             success = strategy.process(input, zip, output_chapter, output_page)
 
         if success:
+            logger.info('Success')
             break
 
     zip.close()
 
     if not success:
         backend.file.update(file_id=input.file_id, parsed=False)
-        print('Failed unzipping {file}'.format(file=input.location))
-
-
-def guess_chapter(filename):
-    try:
-        cname = re.search('[cC][0-9]+', filename).group()
-        return int(cname[1:])
-    except Exception:
-        pass
-
-    print(filename)
-    raise Exception
-
-
-def get_number(name):
-    try:
-        return int(re.search('[0-9]+', name).group())
-    except Exception:
-        pass
-
-    print(name)
-    raise Exception
+        logger.warning('Failed unzipping {file} -- no matching strategy'.format(
+            file=input.location,
+        ))

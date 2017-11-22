@@ -1,8 +1,10 @@
+import logging
 import requests
-import json
-from . import config
-from .common import auth_header
 
+from . import config
+from .common import standard_request, auth_header
+
+logger = logging.getLogger(__name__)
 
 url = 'http://{hostname}:{port}/pagedata'.format(
     hostname=config.api_hostname,
@@ -11,18 +13,14 @@ url = 'http://{hostname}:{port}/pagedata'.format(
 
 
 def create(page_id, data):
-    params = {
-        'page_id': page_id,
-    }
-
-    response = requests.put(url=url, params=params, data=data, headers=auth_header)
-
-    jsn = json.loads(response.text)
-
-    if jsn['status'] == 'success':
-        return jsn['data']
-    else:
-        raise RuntimeError(jsn)
+    return standard_request(
+        model='pagedata',
+        method='create',
+        params={
+            'page_id': page_id,
+        },
+        logger=logger,
+    )
 
 
 def read(page_id):
@@ -36,15 +34,11 @@ def read(page_id):
 
 
 def delete(page_id):
-    params = {
-        'page_id': page_id,
-    }
-
-    response = requests.delete(url=url, params=params, headers=auth_header)
-
-    jsn = json.loads(response.text)
-
-    if jsn['status'] == 'success':
-        return jsn['data']
-    else:
-        raise RuntimeError(jsn)
+    return standard_request(
+        model='pagedata',
+        method='delete',
+        params={
+            'page_id': page_id,
+        },
+        logger=logger,
+    )

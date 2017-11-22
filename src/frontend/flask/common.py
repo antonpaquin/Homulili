@@ -1,5 +1,8 @@
 import fs.osfs
 import jinja2
+import logging
+
+logger = logging.getLogger(__name__)
 
 templates = fs.osfs.OSFS('templates')
 js = fs.osfs.OSFS('js')
@@ -15,6 +18,9 @@ def render_template(name, **kwargs):
             html = template.render(**kwargs)
         return html
     else:
+        logger.warning('Request for missing resource: {name}'.format(
+            name=filename,
+        ))
         return ''
 
 
@@ -25,6 +31,9 @@ def render_scss(name):
             return css_f.read()
             # return scss.parser.parse(scss_f.read())
     else:
+        logger.warning('Request for missing resource: {name}'.format(
+            name=filename,
+        ))
         return ''
 
 
@@ -34,6 +43,9 @@ def render_js(name):
         with js.open(filename, 'r') as js_f:
             return js_f.read()
     else:
+        logger.warning('Request for missing resource: {name}'.format(
+            name=filename,
+        ))
         return ''
 
 
@@ -43,6 +55,9 @@ def render_lib(name):
         with lib.open(filename, 'r') as lib_f:
             return lib_f.read()
     else:
+        logger.warning('Request for missing resource: {name}'.format(
+            name=filename,
+        ))
         return ''
 
 
@@ -52,4 +67,7 @@ def render_bin(name):
         with lib.open(filename, 'rb') as lib_f:
             return lib_f.read()
     else:
+        logger.warning('Request for missing resource: {name}'.format(
+            name=filename,
+        ))
         return ''

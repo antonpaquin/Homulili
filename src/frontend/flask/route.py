@@ -1,4 +1,5 @@
 from flask import Flask
+import logging
 
 from common import render_template, render_scss, render_js, render_lib, render_bin
 import manga
@@ -8,6 +9,17 @@ import pagedata
 import security
 
 import config
+
+
+logging.basicConfig(
+    level=logging.DEBUG,
+    format='%(asctime)s %(name)-12s %(levelname)-8s %(message)s',
+    datefmt='%Y-%m-%d %H:%M:%S',
+    filename='/var/log/homulili/frontend.log',
+    filemode='w',
+)
+logger = logging.getLogger(__name__)
+
 
 app = Flask(__name__)
 

@@ -1,79 +1,57 @@
-import requests
-import json
-from . import config
-from .common import auth_header
+import logging
 
+from .common import standard_request
 
-url = 'http://{hostname}:{port}/page'.format(
-    hostname=config.api_hostname,
-    port=config.api_public_port,
-)
+logger = logging.getLogger(__name__)
 
 
 def create(chapter_id, sort_key, file):
-    params = {key: value for key, value in {
-        'chapter_id': chapter_id,
-        'sort_key': sort_key,
-        'file': file,
-    }.items() if value is not None}
-
-    response = requests.put(url=url, params=params, headers=auth_header)
-
-    jsn = json.loads(response.text)
-
-    if jsn['status'] == 'success':
-        return jsn['data']
-    else:
-        print(params)
-        raise RuntimeError(jsn)
+    return standard_request(
+        model='page',
+        method='create',
+        params={
+            'chapter+id': chapter_id,
+            'sort_key': sort_key,
+            'file': file,
+        },
+        logger=logger,
+    )
 
 
 def read(page_id):
-    params = {key: value for key, value in {
-        'id': page_id,
-    }.items() if value is not None}
-
-    response = requests.get(url=url, params=params, headers=auth_header)
-
-    jsn = json.loads(response.text)
-
-    if jsn['status'] == 'success':
-        return jsn['data']
-    else:
-        raise RuntimeError(jsn)
+    return standard_request(
+        model='page',
+        method='read',
+        params={
+            'id': page_id,
+        },
+        logger=logger,
+    )
 
 
 def update(page_id, chapter_id=None, sort_key=None, file=None):
-    params = {key: value for key, value in {
-        'id': page_id,
-        'chapter_id': chapter_id,
-        'sort_key': sort_key,
-        'file': file
-    }.items() if value is not None}
-
-    response = requests.patch(url=url, params=params, headers=auth_header)
-
-    jsn = json.loads(response.text)
-
-    if jsn['status'] == 'success':
-        return jsn['data']
-    else:
-        raise RuntimeError(jsn)
+    return standard_request(
+        model='page',
+        method='update',
+        params={
+            'id': page_id,
+            'chapter_id': chapter_id,
+            'sort_key': sort_key,
+            'file': file
+        },
+        logger=logger,
+    )
 
 
 def delete(page_id):
-    params = {key: value for key, value in {
-        'id': page_id,
-    }.items() if value is not None}
-
-    response = requests.delete(url=url, params=params, headers=auth_header)
-
-    jsn = json.loads(response.text)
-
-    if jsn['status'] == 'success':
-        return jsn['data']
-    else:
-        raise RuntimeError(jsn)
+    return standard_request(
+        model='page',
+        method='delete',
+        params={
+            'id': page_id,
+        },
+        logger=logger,
+    )
 
 
 def index(chapter_id):
@@ -85,15 +63,11 @@ def index(chapter_id):
         },
     ]
     """
-    params = {key: value for key, value in {
-        'chapter_id': chapter_id,
-    }.items() if value is not None}
-
-    response = requests.request(method='VIEW', url=url, params=params, headers=auth_header)
-
-    jsn = json.loads(response.text)
-
-    if jsn['status'] == 'success':
-        return jsn['data']
-    else:
-        raise RuntimeError(jsn)
+    return standard_request(
+        model='page',
+        method='index',
+        params={
+            'chapter_id': chapter_id,
+        },
+        logger=logger,
+    )

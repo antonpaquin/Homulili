@@ -3,6 +3,7 @@ import requests
 from requests.auth import HTTPBasicAuth
 from fs.osfs import OSFS
 import fs.path
+import logging
 
 from dataflow.utils import input_protection
 import backend
@@ -10,6 +11,8 @@ import secret
 import config
 
 from .common import File
+
+logger = logging.getLogger(__name__)
 
 
 madokami_auth = HTTPBasicAuth(secret.madokami_uname, secret.madokami_pass)
@@ -19,6 +22,7 @@ pyfs = OSFS(config.storage_dir)
 
 @input_protection()
 def download_file(input: File, output: Queue):
+    logger.debug('Entering download_file')
     subdir = fs.path.join(*fs.path.split(input.location)[:-1])
     if not pyfs.isdir(subdir):
         pyfs.makedirs(subdir)
@@ -26,9 +30,10 @@ def download_file(input: File, output: Queue):
     # Before running a download, run a final check to see if we actually need the file
     pre_check = backend.file.read(input.file_id)
     if pre_check['ignore'] or pre_check['downloaded']:
+        logger.info('File already downloaded, skipping')
         return
 
-    print('Starting download for {manga_id}: {name}'.format(
+    logger.info('Starting download for {manga_id}: {name}'.format(
         manga_id=input.manga_id,
         name=input.location,
     ))
@@ -36,7 +41,7 @@ def download_file(input: File, output: Queue):
     with pyfs.open(input.location, 'wb') as data_f:
         for block in data.iter_content(1024):
             data_f.write(block)
-    print('Download complete')
+    logger.info('Download complete')
 
     input.downloaded = True
 
