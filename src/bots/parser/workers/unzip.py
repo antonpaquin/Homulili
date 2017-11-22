@@ -37,15 +37,14 @@ def unzip(input: File, output_chapter: Queue, output_page: Queue):
         logger.debug('Abandoning file -- it appears to have already been parsed')
         return
 
-    # Precheck: make sure file is zip
-    if not zipfile.is_zipfile(input.location):
+    zip_f = root_filestore.open(input.location, 'rb')
+    try:
+        zip = zipfs.ReadZipFS(zip_f)
+    except zipfile.BadZipFile:
         logger.error('Error -- {file} appears to not be a zipfile, marking for ignore'.format(
             file=input.location))
         backend.file.update(file_id=input.file_id, ignore=True)
         return
-
-    zip_f = root_filestore.open(input.location, 'rb')
-    zip = zipfs.ReadZipFS(zip_f)
 
     unzip_strategies = [
         unzippers.chapters_in_subdirectories,
