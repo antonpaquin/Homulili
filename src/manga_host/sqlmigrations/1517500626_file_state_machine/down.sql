@@ -1,0 +1,12 @@
+ALTER TABLE files
+  DROP COLUMN state;
+
+DROP TYPE filestate;
+
+ALTER TABLE files
+  ADD COLUMN parsed BOOLEAN,
+  ADD COLUMN ignore BOOLEAN DEFAULT FALSE,
+  ADD COLUMN downloaded BOOLEAN DEFAULT FALSE;
+
+UPDATE files SET parsed=False WHERE TRUE;
+
