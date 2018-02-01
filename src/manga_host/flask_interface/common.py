@@ -9,6 +9,9 @@ from . import secret
 
 crypto = Fernet(bytes.fromhex(secret.auth_key))
 
+raise Exception(
+    'Current iteration breaks this auth (here: uses an old method for backend token creation)'
+)
 permissions = json.dumps({
     'create': True,
     'read': True,

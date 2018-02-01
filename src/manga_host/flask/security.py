@@ -1,31 +1,22 @@
 from flask import request
-from cryptography.fernet import Fernet
-import json
-import base64
+import psycopg2
 import logging
 
 from standard_request import make_response
-import secret
+from secret import postgres_password
 
 logger = logging.getLogger(__name__)
 
-crypto = Fernet(bytes.fromhex(secret.auth_key))
-
-cache = {
-    'create': set(),
-    'read': set(),
-    'update': set(),
-    'delete': set(),
-    'index': set(),
-    'command': set(),
-}
+conn = psycopg2.connect('dbname=homulili user=homulili host=127.0.0.1 password={postgres_password}'.format(
+    postgres_password=postgres_password,
+))
 
 
 def get_token():
     try:
-        return base64.b64decode(request.headers.get('auth_token') or '')
+        return request.headers.get('auth_token') or ''
     except Exception as err:
-        logger.warning('Could not b64decode auth_token header: {err}'.format(
+        logger.warning('Could not get auth_token header: {err}'.format(
             err=str(err),
         ))
         return ''
@@ -38,7 +29,6 @@ def err_response(method):
     }, code=401)
 
 
-# TODO: security with a user database
 def authenticate(method):
     token = get_token()
 
@@ -46,16 +36,31 @@ def authenticate(method):
         logger.warning('Denying authentication: no auth_token given')
         return False
 
-    if token in cache[method]:
-        logger.info('Accepting cached auth key')
-        return True
+    permission_requested = {
+        'create': 'p_create',
+        'read': 'p_read',
+        'update': 'p_update',
+        'delete': 'p_delete',
+        'index': 'p_index',
+        'command': 'p_command',
+        'admin': 'p_admin',
+    }.get(method, None)
+
+    if not permission_requested:
+        logger.error('Denying authentication: requested invalid permission {method}'.format(
+            method=method,
+        ))
+        return False
 
     try:
-        plaintext = crypto.decrypt(token).decode()
-        jsn = json.loads(plaintext)
-        assert jsn[method]
-        cache[method].add(token)
-        return True
+        with conn.cursor() as cur:
+            cur.execute(
+                'SELECT %s FROM api_access WHERE api_key = %s',
+                (permission_requested, token),
+            )
+            permission_granted = cur.fetchone()
+        assert permission_granted and permission_granted[0]
+
     except AssertionError as err:
         logging.warning('Denying authentication: insufficient permissions')
         return False
