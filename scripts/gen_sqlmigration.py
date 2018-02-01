@@ -5,7 +5,7 @@ if True:
     raise RuntimeError('killswitch -- remove to run, replace when you\'re done')
     pass
 
-name = 'change chapter sort order to real'
+name = 'api tokens'
 migration_dir = 'src/manga_host/sqlmigrations/'
 
 # fmt name into a reasonable directory name
