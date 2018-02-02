@@ -1,29 +1,12 @@
-from cryptography.fernet import Fernet
 import json
-import base64
 import requests
 import logging
 
 from . import config
 from . import secret
 
-crypto = Fernet(bytes.fromhex(secret.auth_key))
-
-raise Exception(
-    'Current iteration breaks this auth (here: uses an old method for backend token creation)'
-)
-permissions = json.dumps({
-    'create': True,
-    'read': True,
-    'update': True,
-    'delete': True,
-    'index': True,
-    'command': True,
-}).encode('utf-8')
-auth_token = base64.b64encode(crypto.encrypt(permissions)).decode()
-
 auth_header = {
-    'auth_token': auth_token,
+    'auth_token': secret.api_admin_key,
 }
 
 

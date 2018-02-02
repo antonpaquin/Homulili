@@ -6,7 +6,7 @@ from cryptography.fernet import Fernet
 import codecs
 
 # Places where a secret.py and a config.py will be generated
-config_locations = [
+config_link_locations = [
     'src/bots/parser',
     'src/bots/scraper',
     'src/bots/scanner',
@@ -15,6 +15,8 @@ config_locations = [
     'src/manga_host/flask_interface',
     'scripts',
 ]
+
+config_location = 'src'
 
 
 # Templates that will be filled as needed
@@ -68,16 +70,21 @@ with open('template_conf/config.py.j2', 'r') as config_f:
 with open('template_conf/secret.py.j2', 'r') as secret_f:
     secret_output = jinja2.Template(secret_f.read()).render(**args)
 
+config_true_fname = os.path.join(project_root, config_location, 'config.py')
+with open(config_true_fname, 'w') as config_f:
+    config_f.write(config_output)
+secret_true_fname = os.path.join(project_root, config_location, 'secret.py')
+with open(secret_true_fname, 'w') as secret_f:
+    secret_f.write(secret_output)
+
 
 # Write config and secret outputs
-for fname in config_locations:
-    config_fname = os.path.join(project_root, fname, 'config.py')
-    with open(config_fname, 'w') as config_f:
-        config_f.write(config_output)
+for fname in config_link_locations:
+    config_link_fname = os.path.join(project_root, fname, 'config.py')
+    os.symlink(config_true_fname, config_link_fname)
 
-    secret_fname = os.path.join(project_root, fname, 'secret.py')
-    with open(secret_fname, 'w') as secret_f:
-        secret_f.write(secret_output)
+    secret_link_fname = os.path.join(project_root, fname, 'secret.py')
+    os.symlink(secret_true_fname, secret_link_fname)
 
 
 # Write less-generic templates

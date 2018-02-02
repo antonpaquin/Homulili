@@ -29,3 +29,8 @@ with conn.cursor() as cur:
 print('Admin key: {key}'.format(
     key=key,
 ))
+
+with open('../src/secret.py', 'a') as secret_f:
+    secret_f.write('\napi_admin_key = \'{key}\'\n'.format(
+        key=key,
+    ))

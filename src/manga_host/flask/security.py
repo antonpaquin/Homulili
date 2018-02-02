@@ -60,7 +60,7 @@ def authenticate(method):
             )
             permission_granted = cur.fetchone()
         assert permission_granted and permission_granted[0]
-
+        return True
     except AssertionError as err:
         logging.warning('Denying authentication: insufficient permissions')
         return False
