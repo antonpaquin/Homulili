@@ -17,12 +17,11 @@ invalidation_timer = {}
 
 
 class NewFile:
-    def __init__(self, manga_id, url, location=None, downloaded=False, ignore=False):
+    def __init__(self, manga_id, url, location=None, state='ready'):
         self.manga_id = manga_id
         self.url = url
         self.location = location
-        self.downloaded = downloaded
-        self.ignore = ignore
+        self.state = state
 
 
 @input_protection()

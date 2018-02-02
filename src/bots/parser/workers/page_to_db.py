@@ -34,11 +34,3 @@ def page_to_db(input: Page):
     )['id']
 
     input.page_id = page_id
-
-    logger.debug('Sending bin data')
-
-    backend.pagedata.create(
-        page_id=page_id,
-        data=input.data,
-    )
-

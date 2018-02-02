@@ -22,27 +22,28 @@ pyfs = OSFS(config.storage_dir)
 
 @input_protection()
 def download_file(input: File, output: Queue):
-    logger.debug('Entering download_file')
-    subdir = fs.path.join(*fs.path.split(input.location)[:-1])
-    if not pyfs.isdir(subdir):
-        pyfs.makedirs(subdir)
+    try:
+        logger.debug('Entering download_file')
+        subdir = fs.path.join(*fs.path.split(input.location)[:-1])
+        if not pyfs.isdir(subdir):
+            pyfs.makedirs(subdir)
 
-    # Before running a download, run a final check to see if we actually need the file
-    pre_check = backend.file.read(input.file_id)
-    if pre_check['ignore'] or pre_check['downloaded']:
-        logger.info('File already downloaded, skipping')
-        return
+        logger.info('Starting download for {manga_id}: {name}'.format(
+            manga_id=input.manga_id,
+            name=input.location,
+        ))
+        data = requests.get(url=input.url, auth=madokami_auth, stream=True)
+        with pyfs.open(input.location, 'wb') as data_f:
+            for block in data.iter_content(1024):
+                data_f.write(block)
+        logger.info('Download complete')
 
-    logger.info('Starting download for {manga_id}: {name}'.format(
-        manga_id=input.manga_id,
-        name=input.location,
-    ))
-    data = requests.get(url=input.url, auth=madokami_auth, stream=True)
-    with pyfs.open(input.location, 'wb') as data_f:
-        for block in data.iter_content(1024):
-            data_f.write(block)
-    logger.info('Download complete')
+        output.put(input)
 
-    input.downloaded = True
-
-    output.put(input)
+    except Exception as e:
+        logger.error('Download failed for {manga_id}: {name}, err: {err}'.format(
+            manga_id=input.manga_id,
+            name=input.location,
+            err=str(e),
+        ))
+        backend.file.update(file_id=input.file_id, state='error')

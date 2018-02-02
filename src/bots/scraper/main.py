@@ -2,7 +2,7 @@ from datetime import timedelta
 import logging
 
 from dataflow import DataFlow
-from workers import get_manga_ids, urls_from_db, ignore_filter, name_file, download_file, update_db
+from workers import get_manga_ids, urls_from_db, name_file, download_file, update_db
 
 
 logging.basicConfig(
@@ -22,7 +22,6 @@ logger.info('Starting scraper')
 df = DataFlow()
 x = df.rate_limited_node(interval=master_interval, target=get_manga_ids)
 x = df.node(input=x.out, target=urls_from_db)
-x = df.node(input=x.out, target=ignore_filter)
 x = df.node(input=x.out, target=name_file)
 x = df.rate_limited_node(interval=madokami_file_interval, input=x.out, target=download_file)
 x = df.node(input=x.out, target=update_db, num_outputs=0)

@@ -19,6 +19,5 @@ def file_to_db(input: NewFile):
         manga_id=input.manga_id,
         file_url=input.url,
         location=input.location,
-        downloaded=input.downloaded,
-        ignore=input.ignore,
+        state=input.state,
     )

@@ -1,9 +1,13 @@
 import re
+import logging
+
+logger = logging.getLogger(__name__)
+
 
 def guess_chapter(filename):
     try:
-        cname = re.search('[cC][0-9]+', filename).group()
-        return int(cname[1:])
+        cname = re.search('[cC][hH]?[0-9]+', filename).group()
+        return int(''.join([c for c in cname if c in '1234567890']))
     except Exception as e:
         logger.error('Couldn\'t guess chapter from filename -- {filename}'.format(
             filename=filename,

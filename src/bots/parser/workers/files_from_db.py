@@ -13,16 +13,16 @@ logger = logging.getLogger(__name__)
 def files_from_db(input: int, output: Queue):
     logger.debug('Entering files_from_db')
 
-    data = backend.file.index(input)
+    data = backend.file.index(manga_id=input, state='downloaded')
 
     logger.debug('Scanned {length} files'.format(
         length=len(data),
     ))
 
     for row in data:
-        if not row['parsed'] and not row['ignore'] and row['downloaded']:
-            output.put(File(
-                manga_id=input,
-                location=row['location'],
-                file_id=row['id'],
-            ))
+        backend.file.update(file_id=row['id'], state='parsing')
+        output.put(File(
+            manga_id=input,
+            location=row['location'],
+            file_id=row['id'],
+        ))

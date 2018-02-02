@@ -16,7 +16,5 @@ def update_db(input: File):
         manga_id=input.manga_id,
         file_url=input.url,
         location=input.location,
-        downloaded=input.downloaded,
-        ignore=input.ignore,
-        parsed=input.parsed,
+        state='downloaded',
     )

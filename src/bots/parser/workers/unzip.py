@@ -31,12 +31,6 @@ def unzip(input: File, output_chapter: Queue, output_page: Queue):
     """
     logger.debug('Entering unzip')
 
-    # Precheck: make sure that the file is still unparsed as we expect
-    file = backend.file.read(file_id=input.file_id)
-    if file['parsed']:
-        logger.debug('Abandoning file -- it appears to have already been parsed')
-        return
-
     zip_f = root_filestore.open(input.location, 'rb')
     try:
         zip = zipfs.ReadZipFS(zip_f)
@@ -57,21 +51,27 @@ def unzip(input: File, output_chapter: Queue, output_page: Queue):
 
     for strategy in unzip_strategies:
         if strategy.match(zip):
-            backend.file.update(file_id=input.file_id, parsed=True)
             logger.info('Trying to unzip file {file} with strategy {strategy}'.format(
                 file=input.location,
                 strategy=strategy.__name__,
             ))
-            success = strategy.process(input, zip, output_chapter, output_page)
+            try:
+                success = strategy.process(input, zip, output_chapter, output_page)
+            except Exception as e:
+                success = False
+                logger.error('Unzip failed: {err}'.format(
+                    err=str(e),
+                ))
 
         if success:
             logger.info('Success')
+            backend.file.update(file_id=input.file_id, state='done')
             break
 
     zip.close()
 
     if not success:
-        backend.file.update(file_id=input.file_id, parsed=False)
-        logger.warning('Failed unzipping {file} -- no matching strategy'.format(
+        logger.warning('Failed unzipping {file} -- no working strategy'.format(
             file=input.location,
         ))
+        backend.file.update(file_id=input.file_id, state='error')
