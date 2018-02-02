@@ -10,7 +10,7 @@ def create(chapter_id, sort_key, file):
         model='page',
         method='create',
         params={
-            'chapter+id': chapter_id,
+            'chapter_id': chapter_id,
             'sort_key': sort_key,
             'file': file,
         },

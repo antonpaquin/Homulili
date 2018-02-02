@@ -67,4 +67,4 @@ def route_lib_images(src):
 
 
 if __name__ == '__main__':
-    app.run(host='0.0.0.0', port=config.admin_internal_port)
+    app.run(host='0.0.0.0', port=int(config.admin_internal_port))

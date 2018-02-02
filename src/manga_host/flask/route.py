@@ -189,9 +189,7 @@ def file():
                 'manga_id': 'manga_id',
                 'url': 'url',
                 'location': 'location',
-                'downloaded': 'downloaded',
-                'ignore': 'ignore',
-                'parsed': 'parsed',
+                'state': 'state',
             },
             'read': {
                 'file_id': 'id',
@@ -201,15 +199,14 @@ def file():
                 'manga_id': 'manga_id',
                 'url': 'url',
                 'location': 'location',
-                'downloaded': 'downloaded',
-                'ignore': 'ignore',
-                'parsed': 'parsed',
+                'state': 'state',
             },
             'delete': {
                 'file_id': 'id',
             },
             'index': {
                 'manga_id': 'manga_id',
+                'state': 'state',
             },
         },
         route_validator=validator.file,
@@ -282,4 +279,4 @@ def pagedata():
 
 
 if __name__ == '__main__':
-    app.run(host='0.0.0.0', port=config.api_internal_port)
+    app.run(host='0.0.0.0', port=int(config.api_internal_port))

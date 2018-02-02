@@ -23,8 +23,7 @@ def update_not_null(table_name, args, condition):
     values = [args[key] for key in keys]
 
     sql = 'UPDATE {table} SET '.format(table=table_name)
-    sql = sql + '(' + ','.join(keys) + ')'
-    sql = sql + '= (' + ','.join(['%s'] * len(values)) + ')'
+    sql = sql + ', '.join(['{key} = %s'.format(key=key) for key in keys])
     sql = sql + ' WHERE {col} = %s'.format(col=condition[0])
 
     results = None
