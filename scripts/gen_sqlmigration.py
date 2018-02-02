@@ -6,7 +6,7 @@ if True:
     pass
 
 name = 'api tokens'
-migration_dir = 'src/manga_host/sqlmigrations/'
+migration_dir = 'src/backend/sqlmigrations/'
 
 # fmt name into a reasonable directory name
 name = name.replace(' ', '_')

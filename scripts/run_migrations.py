@@ -13,7 +13,7 @@ assert direction == 'UP' or direction == 'DOWN'
 os.environ['PGPASSWORD'] = secret.postgres_password
 
 project_root = os.path.dirname(os.getcwd())
-migrations_dir = os.path.join(project_root, 'src/manga_host/sqlmigrations')
+migrations_dir = os.path.join(project_root, 'src/backend/sqlmigrations')
 
 migrations = os.listdir(migrations_dir)
 migrations.sort()

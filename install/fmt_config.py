@@ -11,8 +11,8 @@ config_link_locations = [
     'src/bots/scraper',
     'src/bots/scanner',
     'src/frontend/flask',
-    'src/manga_host/flask',
-    'src/manga_host/flask_interface',
+    'src/backend/flask',
+    'src/backend/flask_interface',
     'scripts',
 ]
 
