@@ -11,11 +11,9 @@ def read(results, args):
             'manga_id': results[1],
             'url': results[2],
             'location': results[3],
-            'downloaded': results[4],
-            'ignore': results[5],
-            'time_created': results[6],
-            'time_updated': results[7],
-            'parsed': results[8],
+            'time_created': results[4],
+            'time_updated': results[5],
+            'state': results[6],
         }
     else:
         return None
@@ -28,11 +26,9 @@ def update(results, args):
             'manga_id': results[1],
             'url': results[2],
             'location': results[3],
-            'downloaded': results[4],
-            'ignore': results[5],
-            'parsed': results[8],
-            'time_created': results[6],
-            'time_updated': results[7],
+            'time_created': results[4],
+            'time_updated': results[5],
+            'state': results[6],
         }
     else:
         return None
@@ -48,9 +44,7 @@ def index(results, args):
             'id': row[0],
             'url': row[1],
             'location': row[2],
-            'downloaded': row[3],
-            'ignore': row[4],
-            'parsed': row[5],
+            'state': row[3],
         }
         for row in results
     ]

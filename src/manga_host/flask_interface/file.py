@@ -5,7 +5,7 @@ from .common import standard_request
 logger = logging.getLogger(__name__)
 
 
-def create(manga_id, file_url, location=None, downloaded=False, ignore=False, parsed=False):
+def create(manga_id, file_url, location=None, state='ready'):
     return standard_request(
         model='file',
         method='create',
@@ -13,9 +13,7 @@ def create(manga_id, file_url, location=None, downloaded=False, ignore=False, pa
             'manga_id': manga_id,
             'url': file_url,
             'location': location,
-            'downloaded': downloaded,
-            'ignore': ignore,
-            'parsed': parsed,
+            'state': state,
         },
         logger=logger,
     )
@@ -45,7 +43,7 @@ def read(file_id):
     )
 
 
-def update(file_id, manga_id=None, file_url=None, location=None, downloaded=None, ignore=None, parsed=None):
+def update(file_id, manga_id=None, file_url=None, location=None, state=None):
     return standard_request(
         model='file',
         method='update',
@@ -54,9 +52,7 @@ def update(file_id, manga_id=None, file_url=None, location=None, downloaded=None
             'manga_id': manga_id,
             'url': file_url,
             'location': location,
-            'downloaded': downloaded,
-            'ignore': ignore,
-            'parsed': parsed,
+            'state': state,
         },
         logger=logger,
     )
@@ -73,12 +69,13 @@ def delete(file_id):
     )
 
 
-def index(manga_id):
+def index(manga_id, state=None):
     return standard_request(
         model='file',
         method='index',
         params={
             'manga_id': manga_id,
+            'state': state,
         },
         logger=logger,
     )

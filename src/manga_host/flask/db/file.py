@@ -1,13 +1,15 @@
 from .common import conn, update_not_null
+import logging
 
+logger = logging.getLogger(__name__)
 
-def create(manga_id, url, location=None, downloaded=False, ignore=False, parsed=False):
+def create(manga_id, url, location=None, state='ready'):
     with conn.cursor() as cur:
         try:
             cur.execute(
-                'INSERT INTO files (manga_id, url, location, downloaded, ignore, parsed) '
-                'VALUES (%s, %s, %s, %s, %s, %s)',
-                (manga_id, url, location, downloaded, ignore, parsed),
+                'INSERT INTO files (manga_id, url, location, state) '
+                'VALUES (%s, %s, %s, %s)',
+                (manga_id, url, location, state),
             )
         except Exception as e:
             conn.rollback()
@@ -27,16 +29,14 @@ def read(file_id):
         return cur.fetchone()
 
 
-def update(file_id, manga_id=None, url=None, location=None, downloaded=None, ignore=None, parsed=None):
+def update(file_id, manga_id=None, url=None, location=None, state=None):
     return update_not_null(
         table_name='files',
         args={
             'manga_id': manga_id,
             'url': url,
             'location': location,
-            'downloaded': downloaded,
-            'ignore': ignore,
-            'parsed': parsed,
+            'state': state,
         },
         condition=('file_id', file_id),
     )
@@ -49,8 +49,20 @@ def delete(file_id):
     conn.commit()
 
 
-def index(manga_id):
+def index(manga_id, state=None):
+    query = 'SELECT file_id, url, location, state FROM files WHERE manga_id = %s'
+    opts = [manga_id]
+
+    logger.debug('INDEX manga_id={id} state={state}'.format(
+        id=manga_id,
+        state=state,
+    ))
+
+    if state:
+        query = query + ' AND state = %s'
+        opts.append(state)
+
     with conn.cursor() as cur:
-        cur.execute('SELECT file_id, url, location, downloaded, ignore, parsed FROM files WHERE manga_id = %s',
-                    (manga_id,))
+        cur.execute(query, opts)
+
         return cur.fetchall()

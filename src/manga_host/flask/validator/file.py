@@ -16,30 +16,12 @@ __location = {
 }
 __location_required = common.required(__location)
 
-
-__downloaded = {
+__state = {
     'required': False,
-    'type': 'boolean',
-    'coerce': common.guess_bool,
+    'type': 'string',
+    'allowed': ['ready', 'downloading', 'downloaded', 'parsing', 'done', 'error', 'ignore'],
 }
-__downloaded_required = common.required(__downloaded)
-
-
-__ignore = {
-    'required': False,
-    'type': 'boolean',
-    'coerce': common.guess_bool,
-}
-__ignore_required = common.required(__ignore)
-
-
-__parsed = {
-    'required': False,
-    'type': 'boolean',
-    'coerce': common.guess_bool,
-}
-__parsed_required = common.required(__ignore)
-
+__state_required = common.required(__state)
 
 __file_id = {
     'required': False,
@@ -54,9 +36,7 @@ create = {
     'manga_id': __manga_id_required,
     'url': __url_required,
     'location': __location,
-    'downloaded': __downloaded,
-    'ignore': __ignore,
-    'parsed': __parsed,
+    'state': __state,
 }
 
 
@@ -70,9 +50,7 @@ update = {
     'manga_id': __manga_id,
     'url': __url,
     'location': __location,
-    'downloaded': __downloaded,
-    'ignore': __ignore,
-    'parsed': __parsed,
+    'state': __state,
 }
 
 
@@ -83,4 +61,5 @@ delete = {
 
 index = {
     'manga_id': __manga_id_required,
+    'state': __state,
 }
