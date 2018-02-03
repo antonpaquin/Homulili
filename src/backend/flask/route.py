@@ -217,6 +217,47 @@ def file():
 
 
 # noinspection PyTypeChecker
+@app.route('/admin', methods=['GET', 'PUT', 'PATCH', 'DELETE', 'VIEW', 'OPTIONS', 'POST'])
+def admin():
+    if not security.authenticate('admin'):
+        return security.err_response('admin')
+
+    return standard_route(
+        param_map={
+            'create': {
+                'create': 'create',
+                'read': 'read',
+                'update': 'update',
+                'delete': 'delete',
+                'index': 'index',
+                'command': 'command',
+                'admin': 'admin',
+            },
+            'read': {
+                'api_key': 'api_key',
+            },
+            'update': {
+                'api_key': 'api_key',
+                'create': 'create',
+                'read': 'read',
+                'update': 'update',
+                'delete': 'delete',
+                'index': 'index',
+                'command': 'command',
+                'admin': 'admin',
+            },
+            'delete': {
+                'api_key': 'api_key',
+            },
+        },
+        route_validator=validator.admin,
+        route_db=db.admin,
+        route_formatter=formatter.admin,
+        commands=route_commands.admin,
+    )
+
+
+# noinspection PyTypeChecker
 @app.route('/pagedata', methods=['GET', 'PUT', 'DELETE', 'OPTIONS', 'POST'])
 def pagedata():
     logger.info('Entering pagedata')

@@ -35,6 +35,11 @@ def file():
     })
 
 
+def admin():
+    return route_command(command_map={
+    })
+
+
 def route_command(command_map):
     logger.debug('Entering route_command')
     if 'command' not in request.args:

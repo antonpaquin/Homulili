@@ -27,5 +27,10 @@ def guess_bool(res):
     return None
 
 
+def validator_hexadecimal(field, value, error):
+    if not set(value) <= set('0123456789abcdef'):
+        error(field, "Must be hexadecimal")
+
+
 # url_regex = "http[s]?://([\w]*\.){1,2}([\w]*)(\/[\w%.&?+!~-]+)*"
 url_regex = 'http[s]?://manga.madokami.al/.*\.zip'
