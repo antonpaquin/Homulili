@@ -30,6 +30,7 @@ prompt_vars = (
     'madokami_uname',
     'madokami_pass',
     'storage_dir',
+    'user_database_dir',
     'api_hostname',
     'api_internal_port',
     'api_public_port',
