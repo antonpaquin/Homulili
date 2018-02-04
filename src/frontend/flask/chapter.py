@@ -9,7 +9,7 @@ logger = logging.getLogger(__name__)
 
 
 @authenticated
-def chapter_route_index():
+def chapter_route_index(api_key):
     logger.info('Responding to chapter::index')
     if 'manga_id' not in request.args:
         logger.warning('Insufficient parameters')
@@ -22,7 +22,7 @@ def chapter_route_index():
 
 
 @authenticated
-def chapter_route_rename_target():
+def chapter_route_rename_target(api_key):
     logger.info('Responding to chapter::rename')
     if 'chapter_id' not in request.args or 'name' not in request.args:
         logger.warning('Insufficient parameters')
@@ -35,7 +35,7 @@ def chapter_route_rename_target():
 
 
 @authenticated
-def chapter_route_delete_target():
+def chapter_route_delete_target(api_key):
     logger.info('Responding to chapter::delete')
     if 'chapter_id' not in request.args:
         logger.warning('Insufficient parameters')
@@ -47,7 +47,7 @@ def chapter_route_delete_target():
 
 
 @authenticated
-def chapter_route_resort_target():
+def chapter_route_resort_target(api_key):
     logger.info('Responding to chapter::resort')
     if 'chapter_id' not in request.args:
         logger.warning('Insufficient parameters')

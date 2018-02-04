@@ -9,14 +9,14 @@ logger = logging.getLogger(__name__)
 
 
 @authenticated
-def manga_route_index():
+def manga_route_index(api_key):
     logger.info('Responding to manga::index')
     manga = backend.manga.index()
     return render_template('manga_index', manga=manga)
 
 
 @authenticated
-def manga_route_create_target():
+def manga_route_create_target(api_key):
     logger.info('Responding to manga::create')
     if 'link' not in request.args:
         logger.warning('link not in parameters, cannot create')
@@ -32,7 +32,7 @@ def manga_route_create_target():
 
 
 @authenticated
-def manga_route_delete_target():
+def manga_route_delete_target(api_key):
     logger.info('Responding to manga::delete')
     if 'manga_id' not in request.args:
         logger.warning('manga_id not in parameters, cannot create')
@@ -44,7 +44,7 @@ def manga_route_delete_target():
 
 
 @authenticated
-def manga_route_rename_target():
+def manga_route_rename_target(api_key):
     logger.info('Responding to manga::rename')
     if 'manga_id' not in request.args or 'name' not in request.args:
         logger.warning('Insufficient parameters')

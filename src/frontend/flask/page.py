@@ -10,7 +10,7 @@ logger = logging.getLogger(__name__)
 
 
 @authenticated
-def page_route_display():
+def page_route_display(api_key):
     logger.info('Responding to page::index')
     if 'chapter_id' not in request.args:
         logger.warning('Insufficient arguments')
@@ -24,7 +24,7 @@ def page_route_display():
 
 
 @authenticated
-def page_route_rechapter_target():
+def page_route_rechapter_target(api_key):
     logger.info('Responding to page::rechapter')
     if not request.is_json:
         logger.warning('Rechapter arguments is not JSON')

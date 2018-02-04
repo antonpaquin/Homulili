@@ -8,7 +8,7 @@ logger = logging.getLogger(__name__)
 
 
 @authenticated
-def pagedata_route_display():
+def pagedata_route_display(api_key):
     logger.info('Responding to pagedata::display')
     if 'page_id' not in request.args:
         logger.warning('No page_id in request')
