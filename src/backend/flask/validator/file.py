@@ -60,6 +60,6 @@ delete = {
 
 
 index = {
-    'manga_id': __manga_id_required,
+    'manga_id': __manga_id,
     'state': __state,
 }

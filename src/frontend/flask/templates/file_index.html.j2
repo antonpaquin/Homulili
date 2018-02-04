@@ -1,0 +1,33 @@
+<html>
+<head>
+    <link rel="stylesheet" type="text/css" href="/css/file_error"/>
+    <link rel="stylesheet" type="text/css" href="/css/index"/>
+</head>
+
+<body>
+<div id="navlink">
+    <a href="/">/</a>
+    <a href="/file">File</a>
+</div>
+
+<div id="table-container">
+<table id="file-table">
+    <tr>
+        <td>id</td>
+        <td>state</td>
+        <td>location</td>
+        <td>url</td>
+    </tr>
+{% for f in files %}
+    <tr>
+        <td>{{ f['id'] }}</td>
+        <td>{{ f['state'] }}</td>
+        <td>{{ f['location'] }}</td>
+        <td>{{ f['url'] }}</td>
+    </tr>
+{% endfor %}
+</table>
+</div>
+<div id="homu"></div>
+</body>
+</html>

@@ -68,8 +68,7 @@ tr:first-of-type td {
 }
 
 /* floaty homura */
-body::after {
-    content: "";
+#homu {
     width: 425px;
     height: 601px;
     position: fixed;
@@ -78,6 +77,10 @@ body::after {
     z-index: 1;
     background: url('/lib/images/homura_b.png') no-repeat center;
     background-size: 100%;
+}
+
+#homu:hover {
+    opacity: 0;
 }
 
 /* Style the nice button things */

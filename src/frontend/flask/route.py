@@ -2,11 +2,13 @@ from flask import Flask
 import logging
 
 from common import render_template, render_scss, render_js, render_lib, render_bin
+
+import security
 import manga
 import chapter
 import page
 import pagedata
-import security
+import file
 
 import config
 
@@ -41,6 +43,8 @@ app.route('/page/display')(page.page_route_display)
 app.route('/page/rechapter_target', methods=['POST'])(page.page_route_rechapter_target)
 
 app.route('/pagedata/display')(pagedata.pagedata_route_display)
+
+app.route('/file')(file.file_route_index)
 
 
 @app.route('/')

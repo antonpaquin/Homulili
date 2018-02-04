@@ -69,7 +69,7 @@ def delete(file_id):
     )
 
 
-def index(manga_id, state=None):
+def index(manga_id=None, state=None):
     return standard_request(
         model='file',
         method='index',

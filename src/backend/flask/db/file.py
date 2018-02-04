@@ -3,6 +3,7 @@ import logging
 
 logger = logging.getLogger(__name__)
 
+
 def create(manga_id, url, location=None, state='ready'):
     with conn.cursor() as cur:
         try:
@@ -49,18 +50,28 @@ def delete(file_id):
     conn.commit()
 
 
-def index(manga_id, state=None):
-    query = 'SELECT file_id, url, location, state FROM files WHERE manga_id = %s'
-    opts = [manga_id]
+def index(manga_id=None, state=None):
+    query = 'SELECT file_id, url, location, state FROM files'
+    opts = []
+
+    if any([manga_id, state]):
+        query = query + ' WHERE'
+
+    if manga_id:
+        query = query + ' manga_id = %s'
+        opts.append(manga_id)
+
+    if all([manga_id, state]):
+        query = query + ' AND'
+
+    if state:
+        query = query + ' state = %s'
+        opts.append(state)
 
     logger.debug('INDEX manga_id={id} state={state}'.format(
         id=manga_id,
         state=state,
     ))
-
-    if state:
-        query = query + ' AND state = %s'
-        opts.append(state)
 
     with conn.cursor() as cur:
         cur.execute(query, opts)

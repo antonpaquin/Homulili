@@ -48,7 +48,7 @@ function do_rename(elem, chapter_id) {
 
     elem.classList.add("focus");
 
-    text.onkeydown = function() {
+    text.onkeydown = function(event) {
         if (!(event.key === 'Enter')) {
             return;
         }
@@ -93,7 +93,7 @@ function do_resort(elem, chapter_id) {
         elem.classList.remove("focus");
     };
 
-    sort_inp.onkeydown = function() {
+    sort_inp.onkeydown = function(event) {
         if (!(event.key === 'Enter')) {
             return;
         }
