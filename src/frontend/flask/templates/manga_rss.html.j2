@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<rss xmlns:atom="http://www.w3.org/2005/Atom" version="2.0">
+    <channel>
+        <title>{{ manga['name'] }}</title>
+        <link>http://manga.homuli.li/manga/rss?id={{ manga['id'] }}</link>
+        <description>Homulili RSS feed for {{ manga['name'] }}</description>
+        <generator>Python, jinja, and magic</generator>
+        <docs>implying I write docs</docs>
+        <language>en</language>
+        <pubDate>{{ meta['date'] }}</pubDate>
+        <lastBuildDate>{{ meta['date'] }}</lastBuildDate>
+        <github>https://github.com/antonpaquin/Homulili/</github>
+        <atom:link href="http://manga.homuli.li/manga/rss?id={{ manga['id'] }}" rel="self" type="application/rss+xml"/>
+        {% for c in chapters %}
+        <item>
+            <title>{{ c['name'] }}</title>
+            <link>http://manga.homuli.li/page/display?chapter_id={{ c['id'] }}</link>
+            <description>{{ manga['name'] }} - Chapter {{ (c['sort_key']|string).rstrip('0').rstrip('.') }}</description>
+            <guid>Homulili::m{{ manga['id'] }}::c{{ c['id'] }}</guid>
+        </item>
+        {% endfor %}
+    </channel>
+</rss>

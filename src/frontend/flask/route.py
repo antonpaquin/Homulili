@@ -30,6 +30,7 @@ app.route('/login/create_target', methods=['POST'])(security.create_target)
 app.route('/login/login_target', methods=['POST'])(security.login_target)
 
 app.route('/manga')(manga.manga_route_index)
+app.route('/manga/rss')(manga.manga_route_rss)
 app.route('/manga/create_target')(manga.manga_route_create_target)
 app.route('/manga/rename_target')(manga.manga_route_rename_target)
 app.route('/manga/delete_target')(manga.manga_route_delete_target)

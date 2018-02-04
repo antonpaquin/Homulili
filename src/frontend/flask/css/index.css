@@ -19,32 +19,42 @@ a {
     text-decoration: none;
 }
 
+/* button nav */
+#button-nav {
+    margin: 0 0 30px;
+    display: inline-block;
+    position: relative;
+}
+
+#button-nav .btn {
+    margin: 0;
+}
 
 /* Style table */
 #table-container {
-    padding: 30px;
     display: inline-block;
+    position: relative;
+    padding: 30px;
+    margin: 0 0 30px;
     box-shadow: 0 0 6px -2px rgba(237, 237, 237, 0.2);
     background: rgba(27, 27, 27, 1.0);
-    margin: 0 0 30px;
-    position: relative;
 }
 
 table {
     border-spacing: 0;
 }
 
-tr {
+#table-container tr {
     background-color: rgba(27, 27, 27, 1.0);
     z-index: 2;
     height: 54px;
 }
 
-tr:hover {
+#table-container tr:hover {
     background: #2b2b2b;
 }
 
-td {
+#table-container td {
     padding-left: 10px;
     padding-right: 10px;
     z-index: 2;
@@ -154,6 +164,6 @@ tr:first-of-type td {
 
 /* Cursor change for button things */
 
-.passive, .btn-delete .active {
+.passive, .btn-delete .active, #button-nav .btn {
     cursor: pointer;
 }

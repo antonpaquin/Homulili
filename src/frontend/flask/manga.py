@@ -1,5 +1,6 @@
 from flask import request
 import logging
+from datetime import datetime
 
 import backend
 from common import render_template
@@ -13,6 +14,27 @@ def manga_route_index(api_key):
     logger.info('Responding to manga::index')
     manga = backend.manga.index()
     return render_template('manga_index', manga=manga)
+
+
+@authenticated
+def manga_route_rss(api_key):
+    logger.info('Responding to manga::rss')
+    if 'manga_id' not in request.args:
+        logger.warning('manga_id not in parameters, cannot generate rss')
+        return '', 400
+
+    manga_id = request.args.get('manga_id')
+    manga = backend.manga.read(manga_id)
+    chapters = backend.chapter.index(manga_id)
+    meta = {
+        'date': datetime.now().strftime('%Y-%m-%d %H:%M:%S'),
+    }
+
+    return (
+        render_template('manga_rss', manga=manga, chapters=chapters, meta=meta),
+        200,
+        {'Content-Type': 'application/xml'}
+    )
 
 
 @authenticated
@@ -35,7 +57,7 @@ def manga_route_create_target(api_key):
 def manga_route_delete_target(api_key):
     logger.info('Responding to manga::delete')
     if 'manga_id' not in request.args:
-        logger.warning('manga_id not in parameters, cannot create')
+        logger.warning('manga_id not in parameters, cannot delete')
         return '', 400
 
     manga_id = request.args.get('manga_id')

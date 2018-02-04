@@ -13,6 +13,21 @@
     <a href="/chapter/index?manga_id={{ manga['id'] }}">{{ manga['name'] }}</a>
 </div>
 
+<div id="button-nav">
+    <table>
+        <tr>
+            <td>
+                <div id="btn-nav-files" class="btn">
+                    <a href="/chapter/rss?manga_id={{ manga['id'] }}">
+                        <input type="button" class="passive" value="RSS">
+                    </a>
+                </div>
+            </td>
+        </tr>
+    </table>
+</div>
+<br>
+
 <div id="table-container">
 <table>
     <tr class="table-header">
