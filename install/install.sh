@@ -15,5 +15,5 @@ chmod 777 postgres.sh &&
 popd
 
 pushd $DOCROOT/scripts
-sudo -u postgres python3 run_migrations.py
+sudo -u postgres ./migrations.py run backend up
 popd

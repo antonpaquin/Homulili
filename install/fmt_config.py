@@ -2,8 +2,6 @@ import jinja2
 import os
 import json
 import random
-from cryptography.fernet import Fernet
-import codecs
 
 # Places where a secret.py and a config.py will be generated
 config_link_locations = [
@@ -50,8 +48,6 @@ args['postgres_password'] = ''.join([random.choice(
     'abcdefghijlkmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789'
 ) for _ in range(30)])
 
-# Generate an authentication key automatically
-args['auth_key'] = codecs.encode(Fernet.generate_key(), 'hex').decode()
 
 # Find current project root automatically
 project_root = os.path.dirname(os.getcwd())
