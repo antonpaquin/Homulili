@@ -108,9 +108,13 @@ def run_migration(m_id, direction='up'):
 
     print('Running migration {timestamp}_{name}'.format(timestamp=tstamp, name=name))
 
-    if project in {'backend', 'cdn'}:
+    if project == 'backend':
         os.environ['PGPASSWORD'] = secret.postgres_password
         os.system('psql -X -U homulili -h 127.0.0.1 -f {file} --echo-all homulili'.format(file=full_path))
+        os.environ['PGPASSWORD'] = ''
+    elif project == 'cdn':
+        os.environ['PGPASSWORD'] = secret.postgres_password
+        os.system('psql -X -U homulili -h 127.0.0.1 -f {file} --echo-all homulili_cdn'.format(file=full_path))
         os.environ['PGPASSWORD'] = ''
     else:
         os.system('cat {file} | sqlite3 {database}'.format(

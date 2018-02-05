@@ -46,7 +46,7 @@ function do_rename(elem, manga_id) {
 
     elem.classList.add("focus");
 
-    text.onkeydown = function() {
+    text.onkeydown = function(event) {
         if (!(event.key === 'Enter')) {
             return;
         }
@@ -175,7 +175,7 @@ function finish_create(elem, manga_id, name, author) {
             this.classList.remove("focus");
         }
     }
-    function try_submit() {
+    function try_submit(event) {
         if (event.key === 'Enter') {
             if (link_inp.value !== "") {
                 var name = name_inp.value;

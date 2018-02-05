@@ -11,6 +11,7 @@ config_link_locations = [
     'src/frontend/flask',
     'src/backend/flask',
     'src/backend/flask_interface',
+    'src/cdn/flask',
     'scripts',
 ]
 
@@ -35,6 +36,9 @@ prompt_vars = (
     'admin_hostname',
     'admin_internal_port',
     'admin_public_port',
+    'cdn_hostname',
+    'cdn_internal_port',
+    'cdn_public_port',
 )
 
 # Ask user for variables
@@ -78,10 +82,12 @@ with open(secret_true_fname, 'w') as secret_f:
 # Write config and secret outputs
 for fname in config_link_locations:
     config_link_fname = os.path.join(project_root, fname, 'config.py')
-    os.symlink(config_true_fname, config_link_fname)
+    if not os.path.exists(config_link_fname):
+        os.symlink(config_true_fname, config_link_fname)
 
     secret_link_fname = os.path.join(project_root, fname, 'secret.py')
-    os.symlink(secret_true_fname, secret_link_fname)
+    if not os.path.exists(secret_link_fname):
+        os.symlink(secret_true_fname, secret_link_fname)
 
 
 # Write less-generic templates

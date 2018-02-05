@@ -1,7 +1,9 @@
-from dataflow.utils import input_protection
-import backend
 from time import sleep
 import logging
+
+from dataflow.utils import input_protection
+import backend
+import cdn
 
 from .common import Page
 
@@ -32,5 +34,6 @@ def page_to_db(input: Page):
         sort_key=input.sort_key,
         file=input.file_id,
     )['id']
+    cdn.upload(input.data)
 
     input.page_id = page_id
