@@ -34,6 +34,6 @@ def page_to_db(input: Page):
         sort_key=input.sort_key,
         file=input.file_id,
     )['id']
-    cdn.upload(input.data)
+    cdn.imgdata.upload(input.data)
 
     input.page_id = page_id

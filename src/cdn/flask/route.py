@@ -32,10 +32,11 @@ def image(img_id):
         results = cur.fetchone()
 
     response = flask.Response()
-    response.headers.set('Content-Type', 'image/png')
+
     if results:
-        response.set_data(bytes(cur.fetchone()[0]))
+        response.set_data(bytes(results[0]))
         response.status_code = 200
+        response.headers.set('Content-Type', 'image/png')
     else:
         response.set_data(bytes(0))
         response.status_code = 404
@@ -46,7 +47,7 @@ def image(img_id):
 @app.route('/upload', methods=['POST'])
 def upload():
     with conn.cursor() as cur:
-        cur.execute('INSERT INTO imgdata(data) VALUES (%s)', flask.request.data)
+        cur.execute('INSERT INTO imgdata(data) VALUES (%s)', (flask.request.data,))
         cur.execute('SELECT currval(\'imgdata_img_id_seq\')')
         new_id = cur.fetchone()
     conn.commit()
