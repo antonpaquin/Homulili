@@ -6,8 +6,9 @@ else
     exit 1
 fi
 
-./frontend.sh $1
 ./backend.sh $1
+./frontend.sh $1
+./cdn.sh $1
 ./parser.sh $1
 ./scanner.sh $1
 ./scraper.sh $1

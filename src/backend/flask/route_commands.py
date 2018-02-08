@@ -22,11 +22,7 @@ def chapter():
 
 def page():
     return route_command(command_map={
-    })
-
-
-def pagedata():
-    return route_command(command_map={
+        'add_mirror': page_add_mirror,
     })
 
 
@@ -63,3 +59,27 @@ def route_command(command_map):
         command=command,
     ))
     return command_map[command]()
+
+
+def page_add_mirror():
+    return standard_request(
+        params={
+            'url': request.args.get('url'),
+            'page_id': request.args.get('page_id'),
+        },
+        validator={
+            'page_id': {
+                'required': True,
+                'type': 'integer',
+                'coerce': int,
+                'min': 0,
+            },
+            'url': {
+                'required': True,
+                'type': 'string',
+                'minlength': 5,
+            },
+        },
+        db_call=db.page.command_add_mirror,
+        formatter=None,
+    )

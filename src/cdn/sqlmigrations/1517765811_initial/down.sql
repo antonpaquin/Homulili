@@ -1,5 +1,5 @@
-DROP TRIGGER update_timestamp_pagedata ON pagedata;
+DROP TRIGGER update_timestamp_imgdata ON imgdata;
 
 DROP FUNCTION update_timestamp() CASCADE;
 
-DROP TABLE pagedata;
+DROP TABLE imgdata;

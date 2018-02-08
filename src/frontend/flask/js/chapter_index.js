@@ -105,7 +105,7 @@ function do_resort(elem, chapter_id) {
 
         console.log('Do send resort ' + chapter_id + ' ' + sort_key);
         var req = new XMLHttpRequest();
-        req.open('GET', '/chapter/resort_target?chapter_id=' + chapter_id + '&sort_key=' + name);
+        req.open('GET', '/chapter/resort_target?chapter_id=' + chapter_id + '&sort_key=' + sort_key);
         req.onload = function() {
             finish_resort(elem, chapter_id, sort_key);
         };

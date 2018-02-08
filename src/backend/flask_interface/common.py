@@ -16,7 +16,8 @@ def standard_request(model: str, method: str, params: dict, logger: logging.Logg
         'read': requests.get,
         'update': requests.patch,
         'delete': requests.delete,
-        'index': lambda **x: requests.request(method='VIEW', **x)
+        'index': lambda **x: requests.request(method='VIEW', **x),
+        'command': requests.post,
     }
 
     pparams = {key: value for key, value in params.items() if value is not None}

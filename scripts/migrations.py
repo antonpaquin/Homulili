@@ -91,16 +91,18 @@ def run_migration(m_id, direction='up'):
 
     if direction == 'up':
         cur.execute(
-            "SELECT 1 FROM migrations WHERE state = 'down' AND tstamp < ?",
-            (tstamp,),
+            "SELECT * FROM migrations WHERE state = 'down' AND tstamp < ? AND project = ?",
+            (tstamp, project),
         )
     else:
         cur.execute(
-            "SELECT 1 FROM migrations WHERE state = 'up' AND tstamp > ?",
-            (tstamp,),
+            "SELECT * FROM migrations WHERE state = 'up' AND tstamp > ? AND project = ?",
+            (tstamp, project),
         )
     results = cur.fetchone()
-    assert not results, 'Refusing to execute out of order'
+    if results:
+        print('Found possible out of order row: {r}'.format(r=str(results)))
+        assert not results, 'Refusing to execute out of order'
 
     full_path = get_migration_path(project, tstamp, name, direction)
 

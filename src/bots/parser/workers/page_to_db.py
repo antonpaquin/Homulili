@@ -7,6 +7,8 @@ import cdn
 
 from .common import Page
 
+import config
+
 logger = logging.getLogger(__name__)
 
 
@@ -29,11 +31,21 @@ def page_to_db(input: Page):
         sort_key=input.sort_key,
         chapter_id=input.chapter.chapter_id,
     ))
+
     page_id = backend.page.create(
         chapter_id=input.chapter.chapter_id,
         sort_key=input.sort_key,
         file=input.file_id,
     )['id']
-    cdn.imgdata.upload(input.data)
-
     input.page_id = page_id
+
+    cdn_id = cdn.imgdata.upload(input.data)
+    backend.page.add_mirror(
+        page_id=page_id,
+        url='http://{hostname}:{port}/{id}'.format(
+            hostname=config.cdn_hostname,
+            port=config.cdn_public_port,
+            id=cdn_id,
+        ),
+    )
+

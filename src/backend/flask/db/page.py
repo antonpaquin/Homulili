@@ -23,7 +23,10 @@ def create(chapter_id, sort_key=0, file_id=None):
 def read(page_id):
     with conn.cursor() as cur:
         cur.execute('SELECT * FROM pages WHERE page_id = %s', (page_id,))
-        return cur.fetchone()
+        page = cur.fetchone()
+        cur.execute('SELECT url FROM pagemirrors WHERE page_id = %s', (page_id,))
+        mirrors = cur.fetchall()
+    return page, mirrors
 
 
 def update(page_id, chapter_id=None, sort_key=None, file_name=None):
@@ -47,5 +50,21 @@ def delete(page_id):
 
 def index(chapter_id):
     with conn.cursor() as cur:
-        cur.execute('SELECT page_id, sort_key FROM pages WHERE chapter_id = %s', (chapter_id,))
+        cur.execute(
+            'SELECT pages.page_id, pages.sort_key, pagemirrors.url '
+            'FROM pages FULL OUTER JOIN pagemirrors ON pages.page_id = pagemirrors.page_id '
+            'WHERE chapter_id = %s',
+            (chapter_id,))
         return cur.fetchall()
+
+
+def command_add_mirror(page_id, url):
+    with conn.cursor() as cur:
+        try:
+            cur.execute('INSERT INTO pagemirrors (page_id, url) VALUES (%s, %s)', (page_id, url))
+        except Exception as e:
+            conn.rollback()
+            raise e
+
+    conn.commit()
+    return None

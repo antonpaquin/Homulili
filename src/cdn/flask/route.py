@@ -1,7 +1,7 @@
 import flask
 import logging
-import json
 
+import cerberus
 import psycopg2
 
 import secret
@@ -49,7 +49,7 @@ def upload():
     with conn.cursor() as cur:
         cur.execute('INSERT INTO imgdata(data) VALUES (%s)', (flask.request.data,))
         cur.execute('SELECT currval(\'imgdata_img_id_seq\')')
-        new_id = cur.fetchone()
+        new_id = cur.fetchone()[0]
     conn.commit()
     return flask.jsonify(new_id=new_id)
 

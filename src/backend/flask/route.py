@@ -172,6 +172,7 @@ def page():
             'index': {
                 'chapter_id': 'chapter_id',
             },
+            'command': True,
         },
         route_validator=validator.page,
         route_db=db.page,
@@ -255,68 +256,6 @@ def admin():
         route_formatter=formatter.admin,
         commands=route_commands.admin,
     )
-
-
-# noinspection PyTypeChecker
-@app.route('/pagedata', methods=['GET', 'PUT', 'DELETE', 'OPTIONS', 'POST'])
-def pagedata():
-    logger.info('Entering pagedata')
-    auth_token = request.headers.get('auth_token')
-
-    if request.method == 'PUT':
-        logger.info('Handling request pagedata::create')
-        if not security.authenticate('create'):
-            return security.err_response('create')
-        return standard_request(
-            params={
-                'page_id': request.args.get('page_id'),
-                'data': request.data,
-            },
-            validator=validator.pagedata.create,
-            db_call=db.pagedata.create,
-            formatter=formatter.pagedata.create,
-        )
-
-    elif request.method == 'GET':
-        logger.info('Handling request pagedata::read (binary)')
-        if not security.authenticate('read'):
-            return security.err_response('read')
-        response = flask.Response()
-        try:
-            args = {'page_id': int(request.args.get('page_id'))}
-            data = db.pagedata.read(**args)
-            response.set_data(formatter.pagedata.read(data, args))
-            response.headers.set('Content-Type', 'image/png')
-            response.status_code = 200
-            return response
-        except RuntimeError as e:
-            logger.error('Error in returning page: {err}'.format(
-                err=str(e),
-            ))
-            response.set_data(json.dumps({'status': 'database error', 'err_message': str(e)}))
-            response.status_code = 500
-            return response
-
-    elif request.method == 'DELETE':
-        logger.info('Handling request pagedata::delete')
-        if not security.authenticate('delete'):
-            return security.err_response('delete')
-        return standard_request(
-            params={
-                'page_id': request.args.get('page_id'),
-            },
-            validator=validator.pagedata.delete,
-            db_call=db.pagedata.delete,
-            formatter=formatter.pagedata.delete,
-        )
-
-    elif request.method == 'OPTIONS':
-        logger.info('Handling request pagedata::options')
-        response = flask.Response()
-        response.headers.set('Allow', ','.join([
-            'PUT', 'GET', 'DELETE',
-        ]))
-        return response
 
 
 if __name__ == '__main__':

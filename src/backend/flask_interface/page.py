@@ -71,3 +71,16 @@ def index(chapter_id):
         },
         logger=logger,
     )
+
+
+def add_mirror(page_id, url):
+    return standard_request(
+        model='page',
+        method='command',
+        params={
+            'command': 'add_mirror',
+            'page_id': page_id,
+            'url': url,
+        },
+        logger=logger,
+    )

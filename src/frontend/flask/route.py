@@ -7,7 +7,6 @@ import security
 import manga
 import chapter
 import page
-import pagedata
 import file
 
 import config
@@ -42,8 +41,6 @@ app.route('/chapter/delete_target')(chapter.chapter_route_delete_target)
 
 app.route('/page/display')(page.page_route_display)
 app.route('/page/rechapter_target', methods=['POST'])(page.page_route_rechapter_target)
-
-app.route('/pagedata/display')(pagedata.pagedata_route_display)
 
 app.route('/file')(file.file_route_index)
 
